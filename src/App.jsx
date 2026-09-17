@@ -4,6 +4,7 @@ import Hero from './components/Hero'
 import SoulCursor from './components/SoulCursor'
 import RulesModal from './components/RulesModal'
 import RegistrationModal from './components/RegistrationModal'
+import SplashScreen from './components/SplashScreen'
 import { useScrollReveal } from './hooks/useScrollReveal'
 
 // Lazy-load below-the-fold content
@@ -21,48 +22,9 @@ function Cursor() {
   useEffect(() => {
     const isPointerFine = window.matchMedia('(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)').matches
     setEnabled(isPointerFine)
-
-    if (!isPointerFine) return undefined
-
-    const dot = document.querySelector('.cursor-dot')
-    const ring = document.querySelector('.cursor-ring')
-    if (!dot || !ring) return undefined
-
-    let x = -100
-    let y = -100
-    let ringX = -100
-    let ringY = -100
-    let frame
-
-    const move = (event) => {
-      x = event.clientX
-      y = event.clientY
-      dot.style.transform = `translate3d(${x}px, ${y}px, 0)`
-    }
-
-    const animate = () => {
-      ringX += (x - ringX) * 0.18
-      ringY += (y - ringY) * 0.18
-      ring.style.transform = `translate3d(${ringX}px, ${ringY}px, 0)`
-      frame = requestAnimationFrame(animate)
-    }
-
-    window.addEventListener('pointermove', move)
-    animate()
-
-    return () => {
-      window.removeEventListener('pointermove', move)
-      cancelAnimationFrame(frame)
-    }
   }, [])
 
-  return enabled ? (
-    <>
-      <span className="cursor-dot" />
-      <span className="cursor-ring" />
-      <SoulCursor />
-    </>
-  ) : null
+  return enabled ? <SoulCursor /> : null
 }
 
 export default function App() {
@@ -70,6 +32,7 @@ export default function App() {
 
   const [rulesOpen, setRulesOpen] = useState(false)
   const [registerOpen, setRegisterOpen] = useState(false)
+  const [splashActive, setSplashActive] = useState(true)
 
   useEffect(() => {
     if ('scrollRestoration' in window.history) {
@@ -83,9 +46,17 @@ export default function App() {
 
   const handleOpenRegister = () => setRegisterOpen(true)
   const handleOpenRules = () => setRulesOpen(true)
+  const handleReplaySplash = () => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' })
+    setSplashActive(true)
+  }
 
   return (
     <>
+      {splashActive && (
+        <SplashScreen onFinish={() => setSplashActive(false)} />
+      )}
+
       <Cursor />
       <div className="grain" />
       
@@ -111,7 +82,7 @@ export default function App() {
       </main>
 
       <Suspense fallback={null}>
-        <Footer onOpenRules={handleOpenRules} />
+        <Footer onOpenRules={handleOpenRules} onReplaySplash={handleReplaySplash} />
       </Suspense>
 
       <RulesModal

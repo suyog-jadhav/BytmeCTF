@@ -8,8 +8,6 @@ import {
   Flag,
   Lock,
   Trophy,
-  Sparkles,
-  Zap,
 } from 'lucide-react'
 
 const events = [
@@ -45,8 +43,8 @@ const events = [
     title: 'CTF COMMENCES (FLAG HUNT)',
     date: 'OCTOBER 10, 2026',
     time: '10:00 AM IST',
-    detail: '36-hour non-stop flag hunt begins across all 7 challenge disciplines.',
-    tag: '36-HOUR SPRINT · DYNAMIC JEOPARDY',
+    detail: '8-hour non-stop flag hunt begins across all 7 challenge disciplines.',
+    tag: '8-HOUR SPRINT · DYNAMIC JEOPARDY',
     icon: Flag,
     isHighlight: true,
   },
@@ -56,8 +54,8 @@ const events = [
     status: 'LOCKDOWN',
     statusType: 'freeze',
     title: 'FLAG HUNT CLOSES',
-    date: 'OCTOBER 11, 2026',
-    time: '10:00 PM IST',
+    date: 'OCTOBER 10, 2026',
+    time: '06:00 PM IST',
     detail: 'Scoreboard freezes. Flag gateways lock and writeup reviews begin.',
     tag: 'SCOREBOARD FREEZE · WRITEUPS',
     icon: Lock,
@@ -70,8 +68,8 @@ const events = [
     title: 'GRAND RESULTS & KEYNOTE',
     date: 'OCTOBER 14, 2026',
     time: '05:00 PM IST',
-    detail: 'Champions crowned, ₹75,000+ prizes disbursed, and author writeups published.',
-    tag: '₹75,000+ CASH · HTB VOUCHERS',
+    detail: 'Champions crowned, ₹15,000 prizes disbursed, and author writeups published.',
+    tag: '₹15,000 CASH · HTB VOUCHERS',
     icon: Trophy,
   },
 ]
@@ -106,31 +104,6 @@ export default function Timeline() {
     card.style.setProperty('--ry', `${((event.clientX - rect.left) / rect.width - 0.5) * 6}deg`)
   }
 
-  const handleDownloadCalendar = () => {
-    const icsContent = [
-      'BEGIN:VCALENDAR',
-      'VERSION:2.0',
-      'PRODID:-//OWASP PCCOE//ByteMe CTF 2026//EN',
-      'BEGIN:VEVENT',
-      'SUMMARY:ByteMe CTF 2026 — OWASP PCCOE',
-      'DESCRIPTION:ByteMe CTF 36-hour capture-the-flag cybersecurity competition.',
-      'DTSTART:20261017T043000Z',
-      'DTEND:20261018T163000Z',
-      'LOCATION:Online (https://byteme-ctf.local)',
-      'STATUS:CONFIRMED',
-      'END:VEVENT',
-      'END:VCALENDAR',
-    ].join('\r\n')
-
-    const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' })
-    const url = URL.createObjectURL(blob)
-    const link = document.createElement('a')
-    link.href = url
-    link.download = 'byteme-ctf-2026.ics'
-    link.click()
-    URL.revokeObjectURL(url)
-  }
-
   const filteredEvents = filter === 'ALL'
     ? events
     : filter === 'PRE'
@@ -146,13 +119,13 @@ export default function Timeline() {
         <div className="timeline-badge-row">
           <span className="section-kicker">03 / THE ASCENT</span>
           <span className="timeline-telemetry-badge">
-            <Clock size={12} /> 36-HOUR TIMEFRAME
+            <Clock size={12} /> 8-HOUR TIMEFRAME
           </span>
         </div>
 
         <h2>THE SIGNAL<br /><em>UNFOLDS</em></h2>
         <p className="timeline-sub">
-          Mark your coordinates across five key milestones leading into and through the 36-hour competition window.
+          Mark your coordinates across five key milestones leading into and through the 8-hour competition window.
         </p>
 
         <div className="timeline-actions-row">
@@ -183,16 +156,6 @@ export default function Timeline() {
               RESULTS
             </button>
           </div>
-
-          <button
-            type="button"
-            className="timeline-calendar-btn"
-            onClick={handleDownloadCalendar}
-            aria-label="Download calendar invite for ByteMe CTF"
-          >
-            <Calendar size={14} />
-            <span>ADD TO CALENDAR (.ICS)</span>
-          </button>
         </div>
       </div>
 
@@ -260,17 +223,6 @@ export default function Timeline() {
                   <div className="strip-time">
                     <Clock size={13} className="strip-icon" />
                     <span>{evt.time}</span>
-                  </div>
-                </div>
-
-                {/* Reduced, Punchy Detail Description */}
-                <p className="timeline-card-desc">{evt.detail}</p>
-
-                {/* Clean Highlight Tag Pill */}
-                <div className="timeline-card-footer">
-                  <div className="timeline-tag-pill">
-                    {evt.isHighlight ? <Zap size={12} className="tag-sparkle" /> : <Sparkles size={12} className="tag-sparkle" />}
-                    <span>{evt.tag}</span>
                   </div>
                 </div>
               </div>

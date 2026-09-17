@@ -93,10 +93,20 @@ export default function RegistrationModal({ isOpen, onClose }) {
 
   return (
     <div className="modal-backdrop" onClick={onClose} role="dialog" aria-modal="true" aria-labelledby="register-modal-title">
-      <div className="modal-card" onClick={(e) => e.stopPropagation()}>
+      <div className="modal-card modal-card--cyber" onClick={(e) => e.stopPropagation()}>
+        {/* Top illuminated laser beam */}
+        <div className="modal-laser-beam" aria-hidden="true" />
+
+        {/* Chamfered Tech Corner Brackets */}
+        <span className="card-bracket card-bracket--tl" aria-hidden="true" />
+        <span className="card-bracket card-bracket--tr" aria-hidden="true" />
+        <span className="card-bracket card-bracket--bl" aria-hidden="true" />
+        <span className="card-bracket card-bracket--br" aria-hidden="true" />
+
         <div className="modal-header">
           <div className="modal-kicker">
-            <Users size={14} /> TEAM TRANSMISSION GATE
+            <span className="modal-kicker-beacon" aria-hidden="true" />
+            <Users size={14} /> TEAM REGISTRATION
           </div>
           <button className="modal-close-btn" onClick={onClose} aria-label="Close registration modal">
             <X size={20} />
@@ -106,25 +116,28 @@ export default function RegistrationModal({ isOpen, onClose }) {
         {existingReg ? (
           <div className="ticket-view">
             <div className="ticket-badge">
-              <CheckCircle2 size={16} /> REGISTRATION CONFIRMED
+              <CheckCircle2 size={16} /> REGISTRATION CONFIRMED · ACCESS GRANTED
             </div>
             <h2 id="register-modal-title" className="modal-title">
               SOUL CREST <em>UNLOCKED</em>
             </h2>
             <p className="modal-subtitle">
-              Your squad has been granted entry into the Soul Realm. Present your access token during the opening signal.
+              Your squad coordinates have been locked into the Soul Realm. Retain your access token for the opening signal.
             </p>
 
             <div className="digital-ticket">
+              <span className="ticket-notch ticket-notch--left" aria-hidden="true" />
+              <span className="ticket-notch ticket-notch--right" aria-hidden="true" />
+
               <div className="ticket-header">
                 <div className="ticket-brand">
-                  <Shield size={20} />
+                  <Shield size={22} className="ticket-shield" />
                   <div>
                     <b>BYTEME CTF</b>
-                    <small>OWASP PCCOE CHAPTER</small>
+                    <small>OFFICIAL OWASP PCCOE CHAPTER PASS</small>
                   </div>
                 </div>
-                <span className="ticket-status">ACTIVE CODENAME</span>
+                <span className="ticket-status">● VERIFIED SQUAD</span>
               </div>
 
               <div className="ticket-body">
@@ -142,31 +155,39 @@ export default function RegistrationModal({ isOpen, onClose }) {
                 </div>
                 <div className="ticket-field">
                   <span>CREW SIZE</span>
-                  <strong>{existingReg.teamSize} Operative{existingReg.teamSize > 1 ? 's' : ''}</strong>
+                  <strong>{existingReg.teamSize === '1' ? 'Solo (1 Operative)' : 'Duo (2 Operatives)'}</strong>
                 </div>
-                {existingReg.memberNames && (
+                {existingReg.teamSize === '2' && existingReg.memberNames && (
                   <div className="ticket-field ticket-field--full">
-                    <span>OPERATIVES</span>
+                    <span>SECOND OPERATIVE</span>
                     <strong>{existingReg.memberNames}</strong>
                   </div>
                 )}
+                <div className="ticket-field ticket-field--full">
+                  <span>COMMUNICATION FREQ</span>
+                  <strong>{existingReg.leaderEmail} · {existingReg.discordTag}</strong>
+                </div>
               </div>
 
               <div className="ticket-footer">
-                <div>
-                  <span className="ticket-label">SOUL ACCESS TOKEN</span>
+                <div className="ticket-token-col">
+                  <span className="ticket-label">OFFICIAL ACCESS TOKEN KEY</span>
                   <code className="ticket-passcode">{existingReg.passId}</code>
                 </div>
                 <button className="ticket-copy-btn" onClick={handleCopyTicket} title="Copy Token ID">
                   {copied ? <Check size={16} /> : <Copy size={16} />}
-                  {copied ? 'COPIED' : 'COPY'}
+                  {copied ? 'TOKEN COPIED' : 'COPY TOKEN'}
                 </button>
+              </div>
+
+              <div className="ticket-barcode-row" aria-hidden="true">
+                <span className="ticket-barcode-hash">01000010 01111001 01110100 01100101 01001101 01100101 // BYTEME-CTF-2026</span>
               </div>
             </div>
 
             <div className="ticket-actions">
               <button
-                className="button-magnetic"
+                className="button-magnetic ticket-discord-btn"
                 onClick={() => {
                   window.open('https://discord.gg/invite/owasp-pccoe', '_blank')
                 }}
@@ -174,7 +195,7 @@ export default function RegistrationModal({ isOpen, onClose }) {
                 JOIN OPERATIVES DISCORD <ArrowRight size={16} />
               </button>
               <button className="text-button" onClick={handleResetRegistration}>
-                Register a different team
+                Register a different squad
               </button>
             </div>
           </div>
@@ -184,7 +205,7 @@ export default function RegistrationModal({ isOpen, onClose }) {
               SUMMON YOUR <em>SQUAD</em>
             </h2>
             <p className="modal-subtitle">
-              Free registration. Teams of 1–4 members. Challenge tracks open October 10, 2026.
+              Free entry · Solo or Duo · Unlocks October 10, 2026
             </p>
 
             <div className="form-grid">
@@ -202,21 +223,30 @@ export default function RegistrationModal({ isOpen, onClose }) {
               </div>
 
               <div className="form-group">
-                <label htmlFor="teamSize">TEAM SIZE</label>
-                <select
-                  id="teamSize"
-                  value={formData.teamSize}
-                  onChange={(e) => setFormData({ ...formData, teamSize: e.target.value })}
-                >
-                  <option value="1">1 Member (Solo Operative)</option>
-                  <option value="2">2 Members (Duo)</option>
-                  <option value="3">3 Members (Trio)</option>
-                  <option value="4">4 Members (Full Squad)</option>
-                </select>
+                <label>TEAM FORMAT *</label>
+                <div className="team-format-toggle" role="radiogroup" aria-label="Select Team Format">
+                  <button
+                    type="button"
+                    className={`team-format-btn ${formData.teamSize === '1' ? 'active' : ''}`}
+                    onClick={() => setFormData({ ...formData, teamSize: '1', memberNames: '' })}
+                  >
+                    <span className="format-badge">01</span>
+                    <span className="format-label">SOLO (1P)</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    className={`team-format-btn ${formData.teamSize === '2' ? 'active' : ''}`}
+                    onClick={() => setFormData({ ...formData, teamSize: '2' })}
+                  >
+                    <span className="format-badge">02</span>
+                    <span className="format-label">DUO (2P)</span>
+                  </button>
+                </div>
               </div>
 
               <div className="form-group">
-                <label htmlFor="leaderName">LEADER / PRIMARY CONTACT *</label>
+                <label htmlFor="leaderName">LEADER NAME *</label>
                 <input
                   id="leaderName"
                   type="text"
@@ -229,7 +259,7 @@ export default function RegistrationModal({ isOpen, onClose }) {
               </div>
 
               <div className="form-group">
-                <label htmlFor="leaderEmail">COMMUNICATION EMAIL *</label>
+                <label htmlFor="leaderEmail">EMAIL ADDRESS *</label>
                 <input
                   id="leaderEmail"
                   type="email"
@@ -255,11 +285,11 @@ export default function RegistrationModal({ isOpen, onClose }) {
               </div>
 
               <div className="form-group">
-                <label htmlFor="discordTag">DISCORD USERNAME *</label>
+                <label htmlFor="discordTag">DISCORD HANDLE *</label>
                 <input
                   id="discordTag"
                   type="text"
-                  placeholder="e.g. hacker#1337 or handle"
+                  placeholder="e.g. username#1337"
                   value={formData.discordTag}
                   onChange={(e) => setFormData({ ...formData, discordTag: e.target.value })}
                   className={errors.discordTag ? 'input-error' : ''}
@@ -267,16 +297,18 @@ export default function RegistrationModal({ isOpen, onClose }) {
                 {errors.discordTag && <span className="field-error">{errors.discordTag}</span>}
               </div>
 
-              <div className="form-group form-group--full">
-                <label htmlFor="memberNames">TEAM MEMBERS (NAMES &amp; EMAILS)</label>
-                <input
-                  id="memberNames"
-                  type="text"
-                  placeholder="e.g. Alice (alice@gmail.com), Bob (bob@gmail.com)"
-                  value={formData.memberNames}
-                  onChange={(e) => setFormData({ ...formData, memberNames: e.target.value })}
-                />
-              </div>
+              {formData.teamSize === '2' && (
+                <div className="form-group form-group--full form-group--highlight">
+                  <label htmlFor="memberNames">TEAMMATE (NAME &amp; EMAIL) *</label>
+                  <input
+                    id="memberNames"
+                    type="text"
+                    placeholder="Teammate Name (teammate@domain.com)"
+                    value={formData.memberNames}
+                    onChange={(e) => setFormData({ ...formData, memberNames: e.target.value })}
+                  />
+                </div>
+              )}
 
               <div className="form-group form-group--full">
                 <label htmlFor="experience">EXPERIENCE LEVEL</label>
@@ -302,7 +334,7 @@ export default function RegistrationModal({ isOpen, onClose }) {
 
             <div className="form-footer">
               <button type="submit" className="button-magnetic form-submit-btn" disabled={submitting}>
-                {submitting ? 'GENERATING SOUL TOKEN...' : 'REGISTER SQUAD & CLAIM TICKET'}
+                {submitting ? 'REGISTERING SQUAD...' : 'REGISTER SQUAD'}
                 {!submitting && <Sparkles size={16} />}
               </button>
             </div>

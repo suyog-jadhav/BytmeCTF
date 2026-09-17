@@ -10,11 +10,11 @@ export default function Navbar({ onOpenRegister, onOpenRules }) {
     { id: 'about', label: 'About', index: '01' },
     { id: 'tracks', label: 'Tracks', index: '02' },
     { id: 'timeline', label: 'Timeline', index: '03' },
-    { id: 'prizes', label: 'Prizes', index: '04' },
   ]
   const rightNavLinks = [
+    { id: 'prizes', label: 'Prizes', index: '04' },
     { id: 'rules', label: 'Rules', index: '05', isModal: true },
-    { id: 'sponsors', label: 'Partners', index: '06' },
+    { id: 'sponsors', label: 'Sponsors', index: '06' },
   ]
 
   const allLinks = [...leftNavLinks, ...rightNavLinks]
@@ -53,7 +53,13 @@ export default function Navbar({ onOpenRegister, onOpenRules }) {
     <>
       {/* Top Main Navbar */}
       <header className={`navbar ${scrolled ? 'navbar--solid' : ''}`}>
-        <button className="brand" onClick={() => navigate('home')} aria-label="Go to ByteMe CTF home">
+        <a
+          href="https://owasppccoe.vercel.app/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="brand"
+          aria-label="OWASP PCCOE official website"
+        >
           <div className="brand-logo-wrap">
             <img src="/assets/owasp-logo.png" alt="OWASP Logo" className="brand-logo-img" width="32" height="32" />
             <div className="brand-text">
@@ -61,22 +67,18 @@ export default function Navbar({ onOpenRegister, onOpenRules }) {
               <small>PCCOE</small>
             </div>
           </div>
-        </button>
+        </a>
 
         <div className="nav-actions">
-          <span className="nav-ember-wrap">
+          <div className="nav-register-wrap">
             <button
               className="nav-register"
               onClick={() => onOpenRegister ? onOpenRegister() : navigate('register')}
               aria-label="Register team"
             >
-              <span className="nav-register-beacon" aria-hidden="true" />
-              <span>REGISTER</span>
-              <span className="nav-register-arrow" aria-hidden="true">↗</span>
+              REGISTER
             </button>
-            <span className="nav-ember-glow" aria-hidden="true" />
-            <span className="nav-ember-bloom" aria-hidden="true" />
-          </span>
+          </div>
 
           <button
             className="menu-toggle"

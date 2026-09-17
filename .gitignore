@@ -23,6 +23,7 @@ npm-debug.log*
 
 # Scripts (build tooling, not needed in repo)
 scripts/
+scratch/
 
 # Environment variables
 .env

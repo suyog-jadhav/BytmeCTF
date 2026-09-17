@@ -1,17 +1,7 @@
-import { ShieldCheck, Zap, Globe, Award } from 'lucide-react'
-
 const stats = [
   ['7+', 'CHALLENGE TRACKS'],
-  ['1,500+', 'ESTIMATED HACKERS'],
-  ['₹75,000+', 'PRIZE POOL & PERKS'],
-  ['36 HRS', 'CONTINUOUS SIEGE'],
-]
-
-const features = [
-  { icon: Zap, title: 'DYNAMIC SCORING' },
-  { icon: Globe, title: 'GLOBAL COMPETITION' },
-  { icon: ShieldCheck, title: 'CLOUD SANDBOXES' },
-  { icon: Award, title: 'OFFICIAL BADGES' },
+  ['₹15,000', 'PRIZE POOL & PERKS'],
+  ['8 HRS', 'CONTINUOUS SIEGE'],
 ]
 
 export default function About() {
@@ -36,20 +26,6 @@ export default function About() {
             <span>{label}</span>
           </div>
         ))}
-      </div>
-
-      <div className="about-features-grid reveal">
-        {features.map((feat) => {
-          const Icon = feat.icon
-          return (
-            <div className="about-feature-card" key={feat.title}>
-              <div className="feat-icon-wrap">
-                <Icon size={20} />
-              </div>
-              <h3>{feat.title}</h3>
-            </div>
-          )
-        })}
       </div>
     </section>
   )
