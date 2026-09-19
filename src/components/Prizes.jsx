@@ -1,4 +1,3 @@
-import { Sparkles } from 'lucide-react'
 import PrizeCharacter3D from './PrizeCharacter3D'
 
 const medals = [
@@ -6,21 +5,21 @@ const medals = [
     place: '02',
     tier: 'SILVER',
     title: 'RUNNER UP',
-    cash: '₹5,000',
+    cash: 'REVEALING SOON',
     character: 'gamora',
   },
   {
     place: '01',
     tier: 'GOLD',
     title: 'CHAMPION',
-    cash: '₹7,500',
+    cash: 'REVEALING SOON',
     character: 'thanos',
   },
   {
     place: '03',
     tier: 'BRONZE',
     title: 'THIRD PLACE',
-    cash: '₹2,500',
+    cash: 'REVEALING SOON',
     character: 'redskull',
   },
 ]
@@ -28,15 +27,29 @@ const medals = [
 export default function Prizes() {
   return (
     <section id="prizes" className="prizes section-shell">
-      <div className="prize-heading reveal">
-        <div className="section-kicker">04 / THE RECKONING</div>
-        <h2>CLAIM YOUR<br /><em>REWARD</em></h2>
-        <p className="prize-sub">
-          ₹15,000 in cash bounties, certifications, and premium security subscriptions await the sharpest minds.
-        </p>
+      {/* ── PRIZES ARENA CINEMATIC BACKDROP ──────────────── */}
+      <div className="prizes-backdrop" aria-hidden="true">
+        <picture>
+          <source media="(max-width: 768px)" srcSet="/assets/prizes-arena-bg-mobile.jpg" />
+          <img
+            src="/assets/prizes-arena-bg.jpg"
+            alt=""
+            className="prizes-bg-img"
+            loading="lazy"
+          />
+        </picture>
+        <div className="prizes-vignette" />
+        <div className="prizes-ambient-glow" />
       </div>
 
-      <div className="prize-grid">
+      <div className="prizes-content-wrap">
+        <div className="prize-heading reveal">
+          <div className="section-kicker">THE RECKONING // PRIZE POOL</div>
+          <h2>CLAIM YOUR <em>REWARDS</em></h2>
+          <p className="prize-subtitle">BOUNTY POOL &amp; REWARDS // REVEALING SOON</p>
+        </div>
+
+        <div className="prize-grid">
         {medals.map((medal) => {
           const isChampion = medal.place === '01'
 
@@ -47,9 +60,6 @@ export default function Prizes() {
             >
               <div className="prize-card-header">
                 <span className="prize-rank">RANK // {medal.place}</span>
-                <span className={`prize-tier-badge prize-tier-badge--${medal.tier.toLowerCase()}`}>
-                  {medal.tier} DIVISION <Sparkles size={10} style={{ marginLeft: 4 }} />
-                </span>
               </div>
 
               {/* 3D Relic Character Animation */}
@@ -58,11 +68,14 @@ export default function Prizes() {
                 scale={isChampion ? 0.68 : 0.58}
               />
 
-              <h3>{medal.title}</h3>
-              <div className="prize-cash">{medal.cash}</div>
+              <div className="prize-reward-group">
+                <h3>{medal.title}</h3>
+                <div className="prize-cash">{medal.cash}</div>
+              </div>
             </article>
           )
         })}
+      </div>
       </div>
     </section>
   )

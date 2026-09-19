@@ -1,6 +1,6 @@
 import { lazy, Suspense, useEffect, useState } from 'react'
 import anime from 'animejs/lib/anime.es.js'
-import { ArrowUpRight } from 'lucide-react'
+import { ArrowUpRight, ChevronDown } from 'lucide-react'
 import MagicRings from './MagicRings'
 
 const SoulStoneScene = lazy(() => import('./SoulStoneScene'))
@@ -34,9 +34,19 @@ function MagneticButton({ children, className = '', onClick }) {
 
 export default function Hero({ onOpenRegister, onOpenRules }) {
   const [time, setTime] = useState(getTimeLeft)
+  const [hasScrolled, setHasScrolled] = useState(false)
+
   useEffect(() => {
     const interval = window.setInterval(() => setTime(getTimeLeft()), 1000)
     return () => window.clearInterval(interval)
+  }, [])
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setHasScrolled(window.scrollY > 40)
+    }
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
   const handleRegisterClick = () => {
@@ -97,6 +107,29 @@ export default function Hero({ onOpenRegister, onOpenRules }) {
           ))}
         </div>
       </div>
+
+      {/* Cinematic Scroll Indicator Sign */}
+      <button
+        type="button"
+        className={`hero-scroll-sign ${hasScrolled ? 'hero-scroll-sign--hidden' : ''}`}
+        onClick={() => {
+          const nextSec = document.getElementById('about') || document.querySelector('.about')
+          if (nextSec) {
+            nextSec.scrollIntoView({ behavior: 'smooth' })
+          } else {
+            window.scrollTo({ top: window.innerHeight, behavior: 'smooth' })
+          }
+        }}
+        aria-label="Scroll down to explore ByteMe CTF"
+      >
+        <div className="scroll-sign-mouse" aria-hidden="true">
+          <span className="scroll-sign-wheel" />
+        </div>
+        <div className="scroll-sign-content">
+          <span className="scroll-sign-text">SCROLL TO ENTER</span>
+          <ChevronDown size={14} className="scroll-sign-chevron" aria-hidden="true" />
+        </div>
+      </button>
     </section>
   )
 }

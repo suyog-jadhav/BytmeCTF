@@ -14,6 +14,7 @@ const Timeline   = lazy(() => import('./components/Timeline'))
 const Prizes     = lazy(() => import('./components/Prizes'))
 const Register   = lazy(() => import('./components/Register'))
 const Sponsors   = lazy(() => import('./components/Sponsors'))
+const Contact    = lazy(() => import('./components/Contact'))
 const Footer     = lazy(() => import('./components/Footer'))
 
 function Cursor() {
@@ -72,12 +73,13 @@ export default function App() {
         />
 
         <Suspense fallback={<div className="section-loader" />}>
-          <About />
-          <Tracks />
+          <About onOpenRules={handleOpenRules} />
+          <Tracks onOpenRegister={handleOpenRegister} />
           <Timeline />
           <Prizes />
           <Register onOpenRegister={handleOpenRegister} />
           <Sponsors />
+          <Contact />
         </Suspense>
       </main>
 

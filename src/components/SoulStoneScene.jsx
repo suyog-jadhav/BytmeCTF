@@ -91,7 +91,7 @@ function Fragments() {
   ))
 }
 
-function StoneAssembly({ reducedMotion, scale = 0.82, activeShard }) {
+function StoneAssembly({ reducedMotion, scale = 0.82, activeShard, float = true }) {
   const root = useRef()
   const targetRotation = useRef(new THREE.Euler(0.08, -0.35, 0))
   const lastPointer = useRef([0, 0])
@@ -135,7 +135,7 @@ function StoneAssembly({ reducedMotion, scale = 0.82, activeShard }) {
     if (!reducedMotion && !dragging.current) targetRotation.current.y += delta * 0.18
     root.current.rotation.x = THREE.MathUtils.lerp(root.current.rotation.x, targetRotation.current.x, 0.11)
     root.current.rotation.y = THREE.MathUtils.lerp(root.current.rotation.y, targetRotation.current.y, 0.11)
-    root.current.position.y = reducedMotion ? 0 : Math.sin(state.clock.elapsedTime * 0.78) * 0.08
+    root.current.position.y = (reducedMotion || !float) ? 0 : Math.sin(state.clock.elapsedTime * 0.78) * 0.08
   })
 
   return (
@@ -146,10 +146,10 @@ function StoneAssembly({ reducedMotion, scale = 0.82, activeShard }) {
   )
 }
 
-function Scene({ reducedMotion, scale = 0.82, activeShard }) {
+function Scene({ reducedMotion, scale = 0.82, activeShard, float = true }) {
   return <>
     <ambientLight color="#ffe8b8" intensity={0.32} />
-    <StoneAssembly reducedMotion={reducedMotion} scale={scale} activeShard={activeShard} />
+    <StoneAssembly reducedMotion={reducedMotion} scale={scale} activeShard={activeShard} float={float} />
     <Sparkles count={reducedMotion ? 35 : 118} scale={[6, 6, 3]} size={2.05} speed={reducedMotion ? 0 : 0.2} color="#FFD166" opacity={0.75} />
     <EffectComposer>
       <Bloom intensity={1.45} luminanceThreshold={0.35} mipmapBlur />
@@ -158,12 +158,12 @@ function Scene({ reducedMotion, scale = 0.82, activeShard }) {
   </>
 }
 
-export default function SoulStoneScene({ className = 'scene', scale = 0.82, activeShard }) {
+export default function SoulStoneScene({ className = 'scene', scale = 0.82, activeShard, float = true }) {
   const reducedMotion = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
   return (
     <div className={className} role="application" aria-label="Interactive glowing crystal. Drag the stone to rotate it.">
       <Canvas dpr={[1, 1.5]} camera={{ position: [0, 0.1, 6.15], fov: 39 }} gl={{ antialias: false, alpha: true, powerPreference: 'high-performance' }}>
-        <Suspense fallback={null}><Scene reducedMotion={reducedMotion} scale={scale} activeShard={activeShard} /></Suspense>
+        <Suspense fallback={null}><Scene reducedMotion={reducedMotion} scale={scale} activeShard={activeShard} float={float} /></Suspense>
       </Canvas>
     </div>
   )

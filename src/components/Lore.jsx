@@ -39,7 +39,7 @@ export default function Lore() {
       </div>
 
       <div className="lore-copy reveal">
-        <div className="section-kicker">02 / CHALLENGE TRACKS</div>
+        <div className="section-kicker">CHALLENGE TRACKS</div>
         <h2>CHALLENGE<br /><em>TRACKS</em></h2>
         <div className="lore-rule" />
         

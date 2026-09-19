@@ -19,7 +19,13 @@ export default function SoulCursor() {
   const lastSpawnRef = useRef(0)
 
   useEffect(() => {
+    // Disable particle cursor on mobile/touch screens to eliminate CPU/GPU drain and scroll lag
+    if (typeof window !== 'undefined' && (window.matchMedia('(pointer: coarse)').matches || window.innerWidth <= 768)) {
+      return
+    }
+
     const canvas = canvasRef.current
+    if (!canvas) return
     const ctx = canvas.getContext('2d')
 
     const resize = () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight }
@@ -135,6 +141,10 @@ export default function SoulCursor() {
       window.removeEventListener('click', onClick)
     }
   }, [])
+
+  if (typeof window !== 'undefined' && (window.matchMedia('(pointer: coarse)').matches || window.innerWidth <= 768)) {
+    return null
+  }
 
   return (
     <canvas

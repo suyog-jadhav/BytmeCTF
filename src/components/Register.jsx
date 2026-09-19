@@ -13,7 +13,7 @@ export default function Register({ onOpenRegister }) {
         {/* Left Column: Registration Command Dossier */}
         <div className="register-dossier reveal">
           {/* Section Kicker */}
-          <span className="section-kicker">08 / REGISTRATION</span>
+          <span className="section-kicker">REGISTRATION</span>
 
           {/* Epic Main Heading with Punishment Marvel Font & increased letter spacing */}
           <h2 className="register-heading">
@@ -216,7 +216,7 @@ export default function Register({ onOpenRegister }) {
         <div className="register-stone-col reveal">
           <div className="register-stone-stage">
             <Suspense fallback={<div className="register-stone-fallback" />}>
-              <SoulStoneScene className="register-scene" scale={0.68} />
+              <SoulStoneScene className="register-scene" scale={0.68} float={false} />
             </Suspense>
           </div>
         </div>

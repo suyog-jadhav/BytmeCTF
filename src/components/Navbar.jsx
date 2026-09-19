@@ -15,6 +15,7 @@ export default function Navbar({ onOpenRegister, onOpenRules }) {
     { id: 'prizes', label: 'Prizes', index: '04' },
     { id: 'rules', label: 'Rules', index: '05', isModal: true },
     { id: 'sponsors', label: 'Sponsors', index: '06' },
+    { id: 'contact', label: 'Contact', index: '07' },
   ]
 
   const allLinks = [...leftNavLinks, ...rightNavLinks]
@@ -23,7 +24,7 @@ export default function Navbar({ onOpenRegister, onOpenRules }) {
     const onScroll = () => {
       setScrolled(window.scrollY > 32)
 
-      const sections = ['home', 'about', 'tracks', 'timeline', 'prizes', 'register', 'sponsors']
+      const sections = ['home', 'about', 'tracks', 'timeline', 'prizes', 'register', 'sponsors', 'contact']
       const scrollPos = window.scrollY + 200
       for (let i = sections.length - 1; i >= 0; i--) {
         const el = document.getElementById(sections[i])
@@ -36,6 +37,17 @@ export default function Navbar({ onOpenRegister, onOpenRules }) {
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
+
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = ''
+    }
+    return () => {
+      document.body.style.overflow = ''
+    }
+  }, [mobileMenuOpen])
 
   const navigate = (id, isModal = false) => {
     setMobileMenuOpen(false)
@@ -61,7 +73,7 @@ export default function Navbar({ onOpenRegister, onOpenRules }) {
           aria-label="OWASP PCCOE official website"
         >
           <div className="brand-logo-wrap">
-            <img src="/assets/owasp-logo.png" alt="OWASP Logo" className="brand-logo-img" width="32" height="32" />
+            <img src="/assets/owasp-logo.png" alt="OWASP Logo" className="brand-logo-img" width="52" height="52" />
             <div className="brand-text">
               <span>OWASP</span>
               <small>PCCOE</small>
@@ -72,11 +84,117 @@ export default function Navbar({ onOpenRegister, onOpenRules }) {
         <div className="nav-actions">
           <div className="nav-register-wrap">
             <button
-              className="nav-register"
+              className="register-cyber-btn nav-cyber-btn"
               onClick={() => onOpenRegister ? onOpenRegister() : navigate('register')}
               aria-label="Register team"
             >
-              REGISTER
+              {/* Glowing Beam Flares (Top & Bottom, active on hover) */}
+              <span className="cyber-flare cyber-flare--top" aria-hidden="true" />
+              <span className="cyber-flare cyber-flare--bottom" aria-hidden="true" />
+
+              {/* Sci-Fi Chamfered Cyber Armor Vector Frame */}
+              <svg
+                className="cyber-btn-svg"
+                viewBox="0 0 380 64"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                preserveAspectRatio="none"
+                aria-hidden="true"
+              >
+                <defs>
+                  {/* Glowing Amber Gradient for Hover State */}
+                  <linearGradient id="navCyberAmberGlow" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stopColor="#ff7b10" />
+                    <stop offset="20%" stopColor="#ffa726" />
+                    <stop offset="50%" stopColor="#ffcc80" />
+                    <stop offset="80%" stopColor="#ffa726" />
+                    <stop offset="100%" stopColor="#ff7b10" />
+                  </linearGradient>
+
+                  {/* Corner Bracket Gradient */}
+                  <linearGradient id="navCyberBracketGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stopColor="#ffb74d" />
+                    <stop offset="50%" stopColor="#ff7b00" />
+                    <stop offset="100%" stopColor="#d84315" />
+                  </linearGradient>
+
+                  {/* Dark Inner Plate Fill */}
+                  <linearGradient id="navCyberPlateGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stopColor="#1c100a" />
+                    <stop offset="50%" stopColor="#0d0705" />
+                    <stop offset="100%" stopColor="#080403" />
+                  </linearGradient>
+                </defs>
+
+                {/* Dark Inner Plate Polygon */}
+                <polygon
+                  className="cyber-inner-plate"
+                  points="32,6 348,6 370,22 370,42 348,58 32,58 10,42 10,22"
+                  fill="url(#navCyberPlateGrad)"
+                />
+
+                {/* Octagonal Chassis Base Outline */}
+                <polygon
+                  className="cyber-base-frame"
+                  points="32,6 348,6 370,22 370,42 348,58 32,58 10,42 10,22"
+                  stroke="url(#navCyberAmberGlow)"
+                  strokeWidth="1.8"
+                />
+
+                {/* Heavy Chamfered Corner Brackets */}
+                <path
+                  className="cyber-corner-bracket"
+                  d="M 66,4 L 30,4 L 8,24 L 8,36"
+                  stroke="url(#navCyberBracketGrad)"
+                  strokeWidth="4"
+                  strokeLinecap="square"
+                />
+                <path
+                  className="cyber-corner-bracket"
+                  d="M 314,4 L 350,4 L 372,24 L 372,36"
+                  stroke="url(#navCyberBracketGrad)"
+                  strokeWidth="4"
+                  strokeLinecap="square"
+                />
+                <path
+                  className="cyber-corner-bracket"
+                  d="M 372,28 L 372,40 L 350,60 L 314,60"
+                  stroke="url(#navCyberBracketGrad)"
+                  strokeWidth="4"
+                  strokeLinecap="square"
+                />
+                <path
+                  className="cyber-corner-bracket"
+                  d="M 8,28 L 8,40 L 30,60 L 66,60"
+                  stroke="url(#navCyberBracketGrad)"
+                  strokeWidth="4"
+                  strokeLinecap="square"
+                />
+
+                {/* Outer Flanking Side Bars */}
+                <line
+                  className="cyber-side-tick"
+                  x1="2"
+                  y1="24"
+                  x2="2"
+                  y2="40"
+                  stroke="url(#navCyberBracketGrad)"
+                  strokeWidth="2.5"
+                  strokeLinecap="square"
+                />
+                <line
+                  className="cyber-side-tick"
+                  x1="378"
+                  y1="24"
+                  x2="378"
+                  y2="40"
+                  stroke="url(#navCyberBracketGrad)"
+                  strokeWidth="2.5"
+                  strokeLinecap="square"
+                />
+              </svg>
+
+              <span className="cyber-btn-text">REGISTER</span>
             </button>
           </div>
 

@@ -68,8 +68,8 @@ const events = [
     title: 'GRAND RESULTS & KEYNOTE',
     date: 'OCTOBER 14, 2026',
     time: '05:00 PM IST',
-    detail: 'Champions crowned, ₹15,000 prizes disbursed, and author writeups published.',
-    tag: '₹15,000 CASH · HTB VOUCHERS',
+    detail: 'Champions crowned, official bounties disbursed, and author writeups published.',
+    tag: 'CASH PRIZES · HTB VOUCHERS · PERKS',
     icon: Trophy,
   },
 ]
@@ -117,7 +117,7 @@ export default function Timeline() {
       {/* Cinematic Intro Header */}
       <div className="timeline-intro reveal">
         <div className="timeline-badge-row">
-          <span className="section-kicker">03 / THE ASCENT</span>
+          <span className="section-kicker">THE ASCENT</span>
           <span className="timeline-telemetry-badge">
             <Clock size={12} /> 8-HOUR TIMEFRAME
           </span>

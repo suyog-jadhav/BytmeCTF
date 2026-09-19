@@ -21,11 +21,16 @@ Thumbs.db
 *.log
 npm-debug.log*
 
-# Scripts (build tooling, not needed in repo)
+# Scripts and scratch files
 scripts/
 scratch/
+scratch_*
+*.orig.*
+crop_check*
+portal_center_art*
 
 # Environment variables
 .env
 .env.local
 .env.*.local
+
