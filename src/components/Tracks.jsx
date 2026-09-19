@@ -134,7 +134,6 @@ export default function Tracks() {
       <div className="reclaim-real-shell">
         {/* ── Real Header Component matching Reference Artwork ───────── */}
         <header className="reclaim-header reveal">
-          <span className="reclaim-eyebrow">// CHALLENGE TRACKS</span>
           <h2 className="reclaim-title">
             <span>RECLAIM</span> <span className="reclaim-the">THE</span> <span>FRAGMENTS</span>
           </h2>

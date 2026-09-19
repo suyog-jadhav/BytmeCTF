@@ -1,5 +1,50 @@
 import { useEffect } from 'react'
-import { X, ShieldAlert, Flag, Award, Terminal, Scale } from 'lucide-react'
+import { X, Scale } from 'lucide-react'
+
+const RULES = [
+  {
+    num: '01',
+    title: 'Flag Format',
+    text: 'All flags follow the format',
+    code: 'byteme{flag_here}',
+    note: '(strictly case-sensitive).'
+  },
+  {
+    num: '02',
+    title: 'Team Limit',
+    text: 'Teams consist of 1 to 2 members (solo or duo).'
+  },
+  {
+    num: '03',
+    title: 'Dynamic Scoring',
+    text: 'Challenges start at 500 points and decay to 100 points as solves increase.'
+  },
+  {
+    num: '04',
+    title: 'No Sharing',
+    text: 'Sharing flags, solutions, or hints with other teams is strictly prohibited.'
+  },
+  {
+    num: '05',
+    title: 'No Sabotage',
+    text: 'Do not attack competition servers, scoring engines, or peers (no DoS/DDoS).'
+  },
+  {
+    num: '06',
+    title: 'No Brute-Force',
+    text: 'Automated brute-forcing on flag submission portals is strictly forbidden.'
+  },
+  {
+    num: '07',
+    title: 'Writeups for Prizes',
+    text: 'Top 10 teams must submit writeups within 4 hours to claim podium prizes.'
+  },
+  {
+    num: '08',
+    title: 'Organizers\' Decision',
+    text: 'Decisions made by the OWASP PCCOE team are final.'
+  }
+]
 
 export default function RulesModal({ isOpen, onClose }) {
   useEffect(() => {
@@ -19,76 +64,63 @@ export default function RulesModal({ isOpen, onClose }) {
   if (!isOpen) return null
 
   return (
-    <div className="modal-backdrop" onClick={onClose} role="dialog" aria-modal="true" aria-labelledby="rules-title">
-      <div className="modal-card modal-card--wide" onClick={(e) => e.stopPropagation()}>
+    <div
+      className="modal-backdrop"
+      onClick={onClose}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="rules-title"
+    >
+      <div className="modal-card modal-card--simple" onClick={(e) => e.stopPropagation()}>
+        {/* Top Decorative Laser Beam */}
+        <div className="modal-laser-beam" aria-hidden="true" />
+
+        {/* Modal Header */}
         <div className="modal-header">
           <div className="modal-kicker">
-            <Scale size={14} /> OFFICIAL GUIDELINES
+            <span className="modal-kicker-beacon" aria-hidden="true" />
+            <Scale size={13} />
+            <span>OFFICIAL GUIDELINES</span>
           </div>
-          <button className="modal-close-btn" onClick={onClose} aria-label="Close rules modal">
-            <X size={20} />
+          <button
+            className="modal-close-btn"
+            onClick={onClose}
+            aria-label="Close rules modal"
+          >
+            <X size={18} />
           </button>
         </div>
 
+        {/* Modal Title & Subtitle */}
         <h2 id="rules-title" className="modal-title">
-          THE LAWS OF THE <em>SOUL REALM</em>
+          COMPETITION <em>RULES</em>
         </h2>
         <p className="modal-subtitle">
-          Every participant entering ByteMe CTF agrees to uphold the integrity, fairness, and spirit of ethical cybersecurity.
+          Please review the official guidelines below before competing.
         </p>
 
-        <div className="rules-grid">
-          <div className="rule-box">
-            <div className="rule-box-header">
-              <Flag size={18} />
-              <h4>01. Flag Format</h4>
-            </div>
-            <p>
-              All captured flags adhere to the standard format:
-            </p>
-            <div className="code-badge">
-              <code>byteme&#123;s0ul_sh4rd_s4mpl3&#125;</code>
-            </div>
-            <small>Unless explicitly noted in a challenge description. Flags are case-sensitive.</small>
-          </div>
+        {/* Simple & Short Rules List */}
+        <ol className="simple-rules-list">
+          {RULES.map((rule) => (
+            <li key={rule.num} className="simple-rule-item">
+              <span className="simple-rule-num">{rule.num}</span>
+              <div className="simple-rule-body">
+                <strong className="simple-rule-title">{rule.title}:</strong>{' '}
+                <span className="simple-rule-text">{rule.text}</span>
+                {rule.code && (
+                  <code className="simple-rule-code">{rule.code}</code>
+                )}
+                {rule.note && (
+                  <span className="simple-rule-note"> {rule.note}</span>
+                )}
+              </div>
+            </li>
+          ))}
+        </ol>
 
-          <div className="rule-box">
-            <div className="rule-box-header">
-              <Award size={18} />
-              <h4>02. Dynamic Scoring</h4>
-            </div>
-            <p>
-              Jeopardy-style scoring. Challenges start at <strong>500 points</strong> and decay dynamically based on solve count down to a minimum of <strong>100 points</strong>.
-            </p>
-            <small>First bloods on each challenge receive an additional score multiplier and custom soul flair.</small>
-          </div>
-
-          <div className="rule-box">
-            <div className="rule-box-header">
-              <ShieldAlert size={18} />
-              <h4>03. Integrity &amp; Prohibitions</h4>
-            </div>
-            <ul>
-              <li><strong>Zero Flag Sharing:</strong> No hints, leaks, or cross-team collusion.</li>
-              <li><strong>No Infrastructure Sabotage:</strong> Do not attack competition servers, scoring engines, or other teams. Denial of Service (DoS/DDoS) is strictly forbidden.</li>
-              <li><strong>No Automated Brute Force:</strong> Do not brute-force flag submission portals or platform APIs.</li>
-            </ul>
-          </div>
-
-          <div className="rule-box">
-            <div className="rule-box-header">
-              <Terminal size={18} />
-              <h4>04. Writeups &amp; Verification</h4>
-            </div>
-            <p>
-              The top 10 teams on the leaderboard must provide clear, reproducible writeups for their solves within <strong>4 hours</strong> of the competition closing to claim prizes.
-            </p>
-            <small>Originality is strictly verified. Plagiarized or AI-generated junk writeups will disqualify the team.</small>
-          </div>
-        </div>
-
+        {/* Modal Footer */}
         <div className="modal-footer">
-          <p className="modal-note">Questions? Open a ticket in the official OWASP PCCOE Discord server.</p>
+          <p className="modal-note">Questions? Reach out on the official OWASP PCCOE Discord.</p>
           <button className="button-magnetic modal-action-btn" onClick={onClose}>
             I UNDERSTAND &amp; ACCEPT
           </button>

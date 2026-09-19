@@ -5,25 +5,21 @@ import {
   Send,
   Check,
   Copy,
-  User,
   MapPin,
   ExternalLink,
+  Users,
 } from 'lucide-react'
 
 const ORGANIZERS = [
   {
     name: 'Suyog Jadhav',
-    role: 'Lead Organizer & Technical Head',
     phone: '+91 98813 92295',
     email: 'suyog.jadhav24@pccoepune.org',
-    initials: 'SJ',
   },
   {
     name: 'Sarthak Warale',
-    role: 'Event Coordinator & Operations Lead',
     phone: '+91 95273 79149',
     email: 'sarthak.warale24@pccoepune.org',
-    initials: 'SW',
   },
 ]
 
@@ -40,12 +36,12 @@ export default function Contact() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const [errorMessage, setErrorMessage] = useState(null)
-  const [copiedText, setCopiedText] = useState(null)
+  const [copiedField, setCopiedField] = useState(null)
 
-  const handleCopy = (text, label) => {
+  const handleCopy = (text, fieldId) => {
     navigator.clipboard?.writeText(text)
-    setCopiedText(label)
-    setTimeout(() => setCopiedText(null), 2200)
+    setCopiedField(fieldId)
+    setTimeout(() => setCopiedField(null), 2000)
   }
 
   const handleSubmit = async (e) => {
@@ -83,205 +79,236 @@ export default function Contact() {
   }
 
   return (
-    <section id="contact" className="contact-section section-shell">
-      {/* Ambient background glow */}
-      <div className="contact-ambient-glow" aria-hidden="true" />
-
-      <div className="contact-header reveal">
-        <h2>CONTACT <em>US</em></h2>
-        <p className="contact-sub">
-          Reach out to our event coordinators or send us a message directly.
-        </p>
-      </div>
-
-      {/* Copy Notification Toast */}
-      {copiedText && (
-        <div className="contact-toast" role="status" aria-live="polite">
-          <Check size={14} />
-          <span>Copied {copiedText} to clipboard</span>
-        </div>
-      )}
-
-      {/* Dual Layout: Mail Option (First on Mobile) + Event Coordinators */}
-      <div className="contact-grid">
-        {/* Mail / Message Option (Order 1 on mobile) */}
-        <div className="contact-mail-col reveal">
-          <div className="contact-box-header">
-            <Mail size={16} className="contact-box-icon" />
-            <h3 className="contact-col-title">SEND A MESSAGE</h3>
-          </div>
-
-          <div className="contact-form-card">
-            <form className="contact-form" onSubmit={handleSubmit}>
-              <div className="form-group">
-                <label htmlFor="contact-name">YOUR NAME</label>
-                <input
-                  id="contact-name"
-                  type="text"
-                  required
-                  placeholder="Enter your name"
-                  value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="contact-input"
-                />
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="contact-email">EMAIL ADDRESS</label>
-                <input
-                  id="contact-email"
-                  type="email"
-                  required
-                  placeholder="Enter your email"
-                  value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="contact-input"
-                />
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="contact-category">SUBJECT</label>
-                <select
-                  id="contact-category"
-                  value={formData.category}
-                  onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                  className="contact-select"
-                >
-                  <option value="General Inquiry">General Inquiry</option>
-                  <option value="Squad Registration">Squad Registration</option>
-                  <option value="Technical Support">Technical Challenge Support</option>
-                  <option value="Sponsorship">Sponsorship &amp; Partnerships</option>
-                </select>
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="contact-message">MESSAGE</label>
-                <textarea
-                  id="contact-message"
-                  required
-                  rows={4}
-                  placeholder="Write your message here..."
-                  value={formData.message}
-                  onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                  className="contact-textarea"
-                />
-              </div>
-
-              {errorMessage && (
-                <div className="contact-error-banner" role="alert">
-                  <span>{errorMessage}</span>
-                </div>
-              )}
-
-              {submitted ? (
-                <div className="contact-success-banner">
-                  <Check size={18} />
-                  <span>Message transmitted successfully! We will get back to you soon.</span>
-                </div>
-              ) : (
-                <button
-                  type="submit"
-                  className="contact-submit-btn"
-                  disabled={isSubmitting}
-                >
-                  {isSubmitting ? (
-                    <span>SENDING...</span>
-                  ) : (
-                    <>
-                      <span>SEND MESSAGE</span>
-                      <Send size={15} />
-                    </>
-                  )}
-                </button>
-              )}
-            </form>
-          </div>
+    <section id="contact" className="contact-section">
+      <div className="contact-shell">
+        {/* Section Header */}
+        <div className="contact-header reveal">
+          <h2 className="contact-title">
+            CONTACT <em>US</em>
+          </h2>
         </div>
 
-        {/* Event Coordinators (Order 2 on mobile) */}
-        <div className="contact-coordinators-col reveal">
-          <div className="contact-box-header">
-            <User size={16} className="contact-box-icon" />
-            <h3 className="contact-col-title">EVENT COORDINATORS</h3>
-          </div>
+        {/* 2-Column Perfectly Aligned Layout */}
+        <div className="contact-layout">
+          {/* Left Column: Event Coordinators & Venue */}
+          <div className="contact-roster-col reveal">
+            {/* Coordinators Block */}
+            <div className="contact-block">
+              <div className="contact-block-label">
+                <Users size={14} className="block-label-icon" />
+                <span>EVENT COORDINATORS</span>
+              </div>
 
-          <div className="organizer-cards">
-            {ORGANIZERS.map((org) => (
-              <div className="organizer-card" key={org.name}>
-                <div className="organizer-card-header">
-                  <div className="organizer-avatar-badge" aria-hidden="true">
-                    <span>{org.initials}</span>
-                  </div>
-                  <div className="organizer-meta">
+              <div className="organizer-list">
+                {ORGANIZERS.map((org, idx) => (
+                  <article className="organizer-tile" key={org.name}>
                     <h4 className="organizer-name">{org.name}</h4>
-                    <p className="organizer-role">{org.role}</p>
-                  </div>
-                </div>
 
-                <div className="organizer-contact-actions">
-                  {/* Phone */}
-                  <div className="contact-item">
-                    <a
-                      href={`tel:${org.phone.replace(/\s+/g, '')}`}
-                      className="contact-link"
-                      aria-label={`Call ${org.name}`}
-                    >
-                      <Phone size={14} className="contact-icon" />
-                      <span>{org.phone}</span>
-                    </a>
-                    <button
-                      type="button"
-                      className="contact-copy-btn"
-                      onClick={() => handleCopy(org.phone, `${org.name}'s phone`)}
-                      aria-label={`Copy ${org.name}'s phone number`}
-                      title="Copy phone"
-                    >
-                      <Copy size={13} />
-                    </button>
-                  </div>
+                    <div className="organizer-channels">
+                      {/* Phone Channel */}
+                      <div className="channel-row">
+                        <a
+                          href={`tel:${org.phone.replace(/\s+/g, '')}`}
+                          className="channel-link"
+                          aria-label={`Call ${org.name}`}
+                        >
+                          <Phone size={13} className="channel-link-icon" />
+                          <span>{org.phone}</span>
+                        </a>
+                        <button
+                          type="button"
+                          className={`channel-copy-btn ${copiedField === `${idx}-phone` ? 'copied' : ''}`}
+                          onClick={() => handleCopy(org.phone, `${idx}-phone`)}
+                          aria-label={`Copy ${org.name}'s phone number`}
+                          title="Copy phone"
+                        >
+                          {copiedField === `${idx}-phone` ? (
+                            <>
+                              <Check size={12} />
+                              <span>COPIED</span>
+                            </>
+                          ) : (
+                            <>
+                              <Copy size={12} />
+                              <span>COPY</span>
+                            </>
+                          )}
+                        </button>
+                      </div>
 
-                  {/* Email */}
-                  <div className="contact-item">
-                    <a
-                      href={`mailto:${org.email}`}
-                      className="contact-link"
-                      aria-label={`Email ${org.name}`}
-                    >
-                      <Mail size={14} className="contact-icon" />
-                      <span className="contact-email-text">{org.email}</span>
-                    </a>
-                    <button
-                      type="button"
-                      className="contact-copy-btn"
-                      onClick={() => handleCopy(org.email, `${org.name}'s email`)}
-                      aria-label={`Copy ${org.name}'s email`}
-                      title="Copy email"
-                    >
-                      <Copy size={13} />
-                    </button>
-                  </div>
-
-
-                </div>
+                      {/* Email Channel */}
+                      <div className="channel-row">
+                        <a
+                          href={`mailto:${org.email}`}
+                          className="channel-link"
+                          aria-label={`Email ${org.name}`}
+                        >
+                          <Mail size={13} className="channel-link-icon" />
+                          <span className="channel-link-text">{org.email}</span>
+                        </a>
+                        <button
+                          type="button"
+                          className={`channel-copy-btn ${copiedField === `${idx}-email` ? 'copied' : ''}`}
+                          onClick={() => handleCopy(org.email, `${idx}-email`)}
+                          aria-label={`Copy ${org.name}'s email`}
+                          title="Copy email"
+                        >
+                          {copiedField === `${idx}-email` ? (
+                            <>
+                              <Check size={12} />
+                              <span>COPIED</span>
+                            </>
+                          ) : (
+                            <>
+                              <Copy size={12} />
+                              <span>COPY</span>
+                            </>
+                          )}
+                        </button>
+                      </div>
+                    </div>
+                  </article>
+                ))}
               </div>
-            ))}
+            </div>
+
+            {/* Campus Venue Block */}
+            <div className="contact-block">
+              <div className="contact-block-label">
+                <MapPin size={14} className="block-label-icon" />
+                <span>LOCATION</span>
+              </div>
+              <a
+                href="https://maps.google.com/?q=Pimpri+Chinchwad+College+of+Engineering+Pune"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="venue-card"
+                aria-label="Pimpri Chinchwad College of Engineering on Google Maps"
+              >
+                <div className="venue-icon-box">
+                  <MapPin size={18} />
+                </div>
+                <span className="venue-title">Pimpri Chinchwad College of Engineering</span>
+                <ExternalLink size={14} className="venue-external-icon" />
+              </a>
+            </div>
           </div>
 
-          {/* Quick Channels Bar */}
-          <div className="contact-quick-channels">
-            <div className="channel-chip">
-              <MapPin size={14} className="channel-icon" />
-              <span>PCCOE, Sector 26, Pradhikaran, Nigdi, Pune 411044</span>
+          {/* Right Column: Send Message Form */}
+          <div className="contact-form-col reveal">
+            <div className="contact-card">
+              <div className="contact-card-header">
+                <div className="card-header-main">
+                  <Mail size={16} className="card-header-icon" />
+                  <h3 className="card-header-title">SEND A MESSAGE</h3>
+                </div>
+                <span className="card-header-tag">DIRECT INQUIRY</span>
+              </div>
+
+              <form className="refined-form" onSubmit={handleSubmit}>
+                {/* 2-Column Name & Email Row */}
+                <div className="form-grid-row">
+                  <div className="form-field">
+                    <label htmlFor="contact-name" className="form-field-label">
+                      YOUR NAME <span className="req-star">*</span>
+                    </label>
+                    <input
+                      id="contact-name"
+                      type="text"
+                      required
+                      placeholder="e.g. Alex Mercer"
+                      value={formData.name}
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                      className="refined-input"
+                    />
+                  </div>
+
+                  <div className="form-field">
+                    <label htmlFor="contact-email" className="form-field-label">
+                      EMAIL ADDRESS <span className="req-star">*</span>
+                    </label>
+                    <input
+                      id="contact-email"
+                      type="email"
+                      required
+                      placeholder="e.g. alex@domain.com"
+                      value={formData.email}
+                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                      className="refined-input"
+                    />
+                  </div>
+                </div>
+
+                {/* Subject / Category Dropdown */}
+                <div className="form-field">
+                  <label htmlFor="contact-category" className="form-field-label">
+                    SUBJECT / CATEGORY
+                  </label>
+                  <div className="refined-select-wrap">
+                    <select
+                      id="contact-category"
+                      value={formData.category}
+                      onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                      className="refined-select"
+                    >
+                      <option value="General Inquiry">General Inquiry</option>
+                      <option value="Squad Registration">Squad Registration</option>
+                      <option value="Technical Support">Technical Challenge Support</option>
+                      <option value="Sponsorship">Sponsorship &amp; Partnerships</option>
+                    </select>
+                  </div>
+                </div>
+
+                {/* Message Field */}
+                <div className="form-field">
+                  <label htmlFor="contact-message" className="form-field-label">
+                    YOUR MESSAGE <span className="req-star">*</span>
+                  </label>
+                  <textarea
+                    id="contact-message"
+                    required
+                    rows={5}
+                    placeholder="Write your message, question, or proposal..."
+                    value={formData.message}
+                    onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                    className="refined-textarea"
+                  />
+                </div>
+
+                {/* Error Banner */}
+                {errorMessage && (
+                  <div className="form-error-banner" role="alert">
+                    <span>{errorMessage}</span>
+                  </div>
+                )}
+
+                {/* Success Banner or Submit Button */}
+                {submitted ? (
+                  <div className="form-success-banner">
+                    <Check size={18} className="success-icon" />
+                    <div className="success-text">
+                      <strong>Message Sent Successfully</strong>
+                      <span>Thank you. Our organizing team will review your inquiry and get back to you soon.</span>
+                    </div>
+                  </div>
+                ) : (
+                  <button
+                    type="submit"
+                    className="contact-submit-btn"
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? (
+                      <span>SENDING MESSAGE...</span>
+                    ) : (
+                      <>
+                        <span>SEND MESSAGE</span>
+                        <Send size={16} strokeWidth={2.8} />
+                      </>
+                    )}
+                  </button>
+                )}
+              </form>
             </div>
-            <a
-              href="https://discord.gg/ucs7zqR78U"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="channel-chip channel-chip--link"
-            >
-              <ExternalLink size={14} className="channel-icon" />
-              <span>Official CTF Discord</span>
-            </a>
           </div>
         </div>
       </div>

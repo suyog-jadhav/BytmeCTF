@@ -1,7 +1,4 @@
-import { lazy, Suspense } from 'react'
 import { Clock, Users, ShieldCheck, Terminal } from 'lucide-react'
-
-const SoulStoneScene = lazy(() => import('./SoulStoneScene'))
 
 export default function Register({ onOpenRegister }) {
   return (
@@ -9,12 +6,9 @@ export default function Register({ onOpenRegister }) {
       {/* Subtle atmospheric ambient glow */}
       <div className="register-ambient-glow" aria-hidden="true" />
 
-      <div className="register-container section-shell">
+      <div className="register-container">
         {/* Left Column: Registration Command Dossier */}
         <div className="register-dossier reveal">
-          {/* Section Kicker */}
-          <span className="section-kicker">REGISTRATION</span>
-
           {/* Epic Main Heading with Punishment Marvel Font & increased letter spacing */}
           <h2 className="register-heading">
             <em>REGISTER</em>
@@ -165,7 +159,7 @@ export default function Register({ onOpenRegister }) {
                 </div>
                 <div className="spec-item-body">
                   <span className="spec-item-label">TIMEFRAME</span>
-                  <strong className="spec-item-val">OCT 10, 2026</strong>
+                  <strong className="spec-item-val">OCT 09, 2026</strong>
                   <small className="spec-item-sub">8-HOUR SPRINT</small>
                 </div>
               </div>
@@ -209,15 +203,6 @@ export default function Register({ onOpenRegister }) {
             <span className="spec-bracket spec-bracket--tr" aria-hidden="true" />
             <span className="spec-bracket spec-bracket--bl" aria-hidden="true" />
             <span className="spec-bracket spec-bracket--br" aria-hidden="true" />
-          </div>
-        </div>
-
-        {/* Right Column: Real Interactive 3D Soul Stone Altar */}
-        <div className="register-stone-col reveal">
-          <div className="register-stone-stage">
-            <Suspense fallback={<div className="register-stone-fallback" />}>
-              <SoulStoneScene className="register-scene" scale={0.68} float={false} />
-            </Suspense>
           </div>
         </div>
       </div>

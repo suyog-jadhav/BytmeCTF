@@ -1,7 +1,6 @@
 export default function Sponsors() {
   return (
     <section id="sponsors" className="sponsors section-shell">
-      <div className="section-kicker reveal">THE ALLIANCE</div>
       <h2 className="reveal">SPONSORS</h2>
 
       {/* Single Sponsor (Clean logo and name without box) */}

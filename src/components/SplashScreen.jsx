@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, useCallback } from 'react'
 
-const DESKTOP_VIDEO = '/assets/splash_screen_bytme_completed.mp4'
+const DESKTOP_VIDEO_LOCAL = '/assets/new_splash.mp4'
+const DESKTOP_VIDEO_REMOTE = 'https://res.cloudinary.com/xzpsnxrr/video/upload/v1789819633/new_splash.mp4'
 const MOBILE_VIDEO = '/assets/mobile_spash.mp4'
 
 function isMobileScreen() {
@@ -12,9 +13,13 @@ export default function SplashScreen({ onFinish }) {
   const videoRef = useRef(null)
   const [isFadingOut, setIsFadingOut] = useState(false)
   const [isReady, setIsReady] = useState(false)
+  const [loadProgress, setLoadProgress] = useState(0)
+  const [activeSrc, setActiveSrc] = useState(null)
+  const [isLoaded, setIsLoaded] = useState(false)
+
   const hasFinishedRef = useRef(false)
   const hasStartedPlaybackRef = useRef(false)
-  const [videoSrc] = useState(() => (isMobileScreen() ? MOBILE_VIDEO : DESKTOP_VIDEO))
+  const blobUrlRef = useRef(null)
   const [isMuted, setIsMuted] = useState(false)
 
   const handleFinish = useCallback(() => {
@@ -35,7 +40,7 @@ export default function SplashScreen({ onFinish }) {
     video.muted = nextMuted
     if (!nextMuted) {
       video.volume = 1.0
-      video.play().catch(() => {})
+      video.play().catch(() => { })
     }
     setIsMuted(nextMuted)
   }
@@ -58,16 +63,7 @@ export default function SplashScreen({ onFinish }) {
     setIsMuted(false)
   }, [])
 
-  // Pre-set video audio configuration immediately on mount
-  useEffect(() => {
-    const video = videoRef.current
-    if (video) {
-      video.muted = false
-      video.volume = 1.0
-    }
-  }, [])
-
-  // Play video smoothly once sufficiently buffered with audio unmuted by default
+  // Play video smoothly once 100% buffered with audio unmuted by default
   const startPlayback = useCallback(() => {
     if (hasStartedPlaybackRef.current) return
     hasStartedPlaybackRef.current = true
@@ -76,6 +72,7 @@ export default function SplashScreen({ onFinish }) {
     const video = videoRef.current
     if (!video) return
 
+    video.currentTime = 0
     video.muted = false
     video.volume = 1.0
 
@@ -89,17 +86,136 @@ export default function SplashScreen({ onFinish }) {
           // If browser policy restricts unmuted autoplay, start video playing muted initially
           video.muted = true
           setIsMuted(true)
-          video.play().catch(() => {})
+          video.play().catch(() => { })
         })
     }
   }, [])
+
+  // Preload the entire video and audio stream into local memory before starting playback
+  useEffect(() => {
+    let isCancelled = false
+    const controller = new AbortController()
+
+    async function fetchAsBlob(url) {
+      const res = await fetch(url, { signal: controller.signal })
+      if (!res.ok) throw new Error(`HTTP ${res.status}`)
+
+      const contentLengthHeader = res.headers.get('content-length')
+      const total = contentLengthHeader ? parseInt(contentLengthHeader, 10) : 0
+
+      if (!res.body || !total) {
+        const blob = await res.blob()
+        return blob
+      }
+
+      const reader = res.body.getReader()
+      let received = 0
+      const chunks = []
+
+      while (true) {
+        const { done, value } = await reader.read()
+        if (done) break
+        chunks.push(value)
+        received += value.length
+        if (total > 0 && !isCancelled) {
+          const pct = Math.min(99, Math.round((received / total) * 100))
+          setLoadProgress(pct)
+        }
+      }
+
+      return new Blob(chunks, { type: 'video/mp4' })
+    }
+
+    async function preloadVideo() {
+      const candidates = isMobileScreen()
+        ? [MOBILE_VIDEO]
+        : [DESKTOP_VIDEO_LOCAL, DESKTOP_VIDEO_REMOTE]
+
+      for (const src of candidates) {
+        if (isCancelled) return
+        try {
+          const fullBlob = await fetchAsBlob(src)
+          if (isCancelled) return
+          const url = URL.createObjectURL(fullBlob)
+          blobUrlRef.current = url
+          setActiveSrc(url)
+          setLoadProgress(100)
+          setIsLoaded(true)
+          return
+        } catch (err) {
+          if (isCancelled) return
+          console.warn(`Preload attempt for ${src} failed, checking fallback:`, err)
+        }
+      }
+
+      // Direct fallback only if all preload attempts fail
+      if (!isCancelled && !blobUrlRef.current) {
+        const fallbackSrc = isMobileScreen() ? MOBILE_VIDEO : DESKTOP_VIDEO_REMOTE
+        setActiveSrc(fallbackSrc)
+        setLoadProgress(100)
+        setIsLoaded(true)
+      }
+    }
+
+    preloadVideo()
+
+    return () => {
+      isCancelled = true
+      controller.abort()
+      if (blobUrlRef.current) {
+        URL.revokeObjectURL(blobUrlRef.current)
+        blobUrlRef.current = null
+      }
+    }
+  }, [])
+
+  // Strict Condition: Keep loading animation running until BOTH the full video and audio are decoded & ready to play through
+  useEffect(() => {
+    if (!isLoaded || !activeSrc) return
+    const video = videoRef.current
+    if (!video) return
+
+    video.muted = false
+    video.volume = 1.0
+
+    // If browser already has enough decoded data to play to the end without buffering
+    if (video.readyState >= 4) {
+      startPlayback()
+      return
+    }
+
+    const onCanPlayThrough = () => {
+      if (video.readyState >= 4) {
+        startPlayback()
+      } else {
+        requestAnimationFrame(() => {
+          startPlayback()
+        })
+      }
+    }
+
+    video.addEventListener('canplaythrough', onCanPlayThrough, { once: true })
+    video.addEventListener('canplay', onCanPlayThrough, { once: true })
+
+    // Safety fallback if browser stalls readyState notification (max 8s after full blob load)
+    const safetyTimer = setTimeout(() => {
+      if (video.readyState >= 2) {
+        startPlayback()
+      }
+    }, 8000)
+
+    return () => {
+      clearTimeout(safetyTimer)
+      video.removeEventListener('canplaythrough', onCanPlayThrough)
+      video.removeEventListener('canplay', onCanPlayThrough)
+    }
+  }, [isLoaded, activeSrc, startPlayback])
 
   // If muted by browser policy, immediately unmute on first user interaction anywhere
   useEffect(() => {
     if (!isMuted) return
 
     const handleUserGesture = (e) => {
-      // Don't intercept explicit skip button clicks or Escape key
       if (e.target && typeof e.target.closest === 'function' && e.target.closest('.splash-btn-skip')) {
         return
       }
@@ -132,36 +248,6 @@ export default function SplashScreen({ onFinish }) {
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [handleFinish])
 
-  // Pre-buffering listener: ensures smooth glitch-free playback
-  useEffect(() => {
-    const video = videoRef.current
-    if (!video) return
-
-    // If video is already buffered enough
-    if (video.readyState >= 3) {
-      startPlayback()
-      return
-    }
-
-    const onCanPlayThrough = () => {
-      startPlayback()
-    }
-
-    // Safety fallback: after 1.8s, start playback if canplaythrough is delayed
-    const timeoutId = setTimeout(() => {
-      startPlayback()
-    }, 1800)
-
-    video.addEventListener('canplaythrough', onCanPlayThrough, { once: true })
-    video.addEventListener('canplay', onCanPlayThrough, { once: true })
-
-    return () => {
-      clearTimeout(timeoutId)
-      video.removeEventListener('canplaythrough', onCanPlayThrough)
-      video.removeEventListener('canplay', onCanPlayThrough)
-    }
-  }, [startPlayback, videoSrc])
-
   return (
     <div
       className={`splash-fullscreen ${isFadingOut ? 'splash-fullscreen--fade-out' : ''}`}
@@ -171,31 +257,51 @@ export default function SplashScreen({ onFinish }) {
         if (isMuted) unmute()
       }}
     >
-      {/* Sleek Theme Preloader while initial buffer completes */}
+      {/* Sleek Theme Preloader while video completely loads */}
       {!isReady && (
         <div className="splash-preloader" aria-live="polite">
           <div className="splash-preloader-ring">
             <span className="splash-preloader-core" />
           </div>
           <div className="splash-preloader-text">
-            <span className="splash-preloader-label">INITIALIZING SOUL REALM</span>
+            <span className="splash-preloader-label">
+              {loadProgress > 0 && loadProgress < 100
+                ? `BUFFERING SOUL REALM // ${loadProgress}%`
+                : loadProgress === 100
+                  ? 'SYNCHRONIZING AUDIO & VIDEO...'
+                  : 'INITIALIZING SOUL REALM'}
+            </span>
             <span className="splash-preloader-bar">
-              <span className="splash-preloader-fill" />
+              <span
+                className="splash-preloader-fill"
+                style={
+                  loadProgress > 0
+                    ? {
+                        width: `${loadProgress}%`,
+                        left: 0,
+                        animation: 'none',
+                        transition: 'width 0.15s ease',
+                      }
+                    : undefined
+                }
+              />
             </span>
           </div>
         </div>
       )}
 
       {/* Pure Fullscreen Responsive Video */}
-      <video
-        ref={videoRef}
-        src={videoSrc}
-        playsInline
-        preload="auto"
-        onTimeUpdate={handleTimeUpdate}
-        onEnded={handleFinish}
-        className={`splash-fullscreen-video ${isReady ? 'splash-fullscreen-video--ready' : ''}`}
-      />
+      {activeSrc && (
+        <video
+          ref={videoRef}
+          src={activeSrc}
+          playsInline
+          preload="auto"
+          onTimeUpdate={handleTimeUpdate}
+          onEnded={handleFinish}
+          className={`splash-fullscreen-video ${isReady ? 'splash-fullscreen-video--ready' : ''}`}
+        />
+      )}
 
       {/* Cinematic Audio Control */}
       {isReady && (

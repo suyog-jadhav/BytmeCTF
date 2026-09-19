@@ -13,9 +13,8 @@ export default function Navbar({ onOpenRegister, onOpenRules }) {
   ]
   const rightNavLinks = [
     { id: 'prizes', label: 'Prizes', index: '04' },
-    { id: 'rules', label: 'Rules', index: '05', isModal: true },
-    { id: 'sponsors', label: 'Sponsors', index: '06' },
-    { id: 'contact', label: 'Contact', index: '07' },
+    { id: 'sponsors', label: 'Sponsors', index: '05' },
+    { id: 'contact', label: 'Contact', index: '06' },
   ]
 
   const allLinks = [...leftNavLinks, ...rightNavLinks]
@@ -66,7 +65,7 @@ export default function Navbar({ onOpenRegister, onOpenRules }) {
       {/* Top Main Navbar */}
       <header className={`navbar ${scrolled ? 'navbar--solid' : ''}`}>
         <a
-          href="https://owasppccoe.vercel.app/"
+          href="https://owasppccoe.in/"
           target="_blank"
           rel="noopener noreferrer"
           className="brand"

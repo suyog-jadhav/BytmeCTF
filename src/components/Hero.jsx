@@ -4,8 +4,8 @@ import { ArrowUpRight, ChevronDown } from 'lucide-react'
 import MagicRings from './MagicRings'
 
 const SoulStoneScene = lazy(() => import('./SoulStoneScene'))
-// Event Date: October 10, 2026 10:00:00 IST
-const EVENT_DATE = '2026-10-10T10:00:00+05:30'
+// Event Date: October 9, 2026 10:00:00 IST
+const EVENT_DATE = '2026-10-09T10:00:00+05:30'
 
 function getTimeLeft() {
   const difference = new Date(EVENT_DATE).getTime() - Date.now()

@@ -1,5 +1,5 @@
-import Portal3D from './Portal3D'
-import LaserFlow from './LaserFlow'
+
+import { Scale, ArrowUpRight } from 'lucide-react'
 
 const stats = [
   {
@@ -22,7 +22,7 @@ const stats = [
   },
 ]
 
-export default function About() {
+export default function About({ onOpenRules }) {
   return (
     <section id="about" className="about-portal-section">
       {/* ── CINEMATIC PORTAL BACKGROUND & 3D LAYER ──────────────── */}
@@ -37,27 +37,6 @@ export default function About() {
           />
         </picture>
 
-        {/* Dynamic GPU LaserFlow Door Spark Light - Ground spread & refined glow */}
-        <div className="portal-door-laser-stage">
-          <LaserFlow
-            horizontalBeamOffset={0.0}
-            verticalBeamOffset={-0.28}
-            color="#f06200"
-            intensity={0.34}
-            wispDensity={1.2}
-            wispSpeed={14.0}
-            wispIntensity={3.2}
-            flowSpeed={0.32}
-            verticalSizing={3.4}
-            horizontalSizing={1.1}
-            falloffStart={0.85}
-            fogIntensity={0.18}
-            backgroundColor="transparent"
-          />
-        </div>
-
-        {/* Pixel-Matched 3D Rotating Stargate Ring & Volumetric Light Ray */}
-        <Portal3D />
 
         {/* Atmospheric Vignettes for Seamless Edge Integration */}
         <div className="about-portal-vignette" />
@@ -70,11 +49,6 @@ export default function About() {
         <div className="about-portal-top-grid">
           {/* Left Column: Title, Subtitle, & Narrative */}
           <div className="about-portal-headline reveal">
-            <div className="about-kicker">
-              <span>THE INVITATION</span>
-              <span className="kicker-line" />
-            </div>
-
             <h2 className="about-title">
               <span className="title-line-white">ENTER THE</span>
               <span className="title-line-amber">SOUL REALM</span>
@@ -94,15 +68,30 @@ export default function About() {
             <div className="about-narrative-block">
               <div className="about-mission-card">
                 <p className="about-mission-text">
-                  A relentless Capture The Flag siege pushing the boundaries of
-                  offensive security and vulnerability research. Race the clock to
-                  reclaim shattered digital souls across encrypted networks.
+                  A relentless hybrid Capture The Flag siege pushing the boundaries of
+                  offensive security and vulnerability research. Compete on-site or
+                  breach the perimeter remotely to reclaim shattered digital souls across
+                  encrypted networks.
                 </p>
 
                 <div className="about-curiosity-tag">
                   <span className="curiosity-bar" />
                   <span>CURIOSITY LEADS HERE.</span>
                 </div>
+              </div>
+
+              {/* View Official Rules CTA */}
+              <div className="about-actions-row">
+                <button
+                  type="button"
+                  className="about-rules-btn"
+                  onClick={onOpenRules}
+                  aria-label="View competition rules"
+                >
+                  <Scale size={15} className="about-rules-btn-icon" />
+                  <span>RULES OF ENGAGEMENT</span>
+                  <ArrowUpRight size={14} className="about-rules-btn-arrow" />
+                </button>
               </div>
             </div>
           </div>

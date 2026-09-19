@@ -41,7 +41,7 @@ const events = [
     status: 'CRITICAL WINDOW',
     statusType: 'critical',
     title: 'CTF COMMENCES (FLAG HUNT)',
-    date: 'OCTOBER 10, 2026',
+    date: 'OCTOBER 09, 2026',
     time: '10:00 AM IST',
     detail: '8-hour non-stop flag hunt begins across all 7 challenge disciplines.',
     tag: '8-HOUR SPRINT · DYNAMIC JEOPARDY',
@@ -54,7 +54,7 @@ const events = [
     status: 'LOCKDOWN',
     statusType: 'freeze',
     title: 'FLAG HUNT CLOSES',
-    date: 'OCTOBER 10, 2026',
+    date: 'OCTOBER 09, 2026',
     time: '06:00 PM IST',
     detail: 'Scoreboard freezes. Flag gateways lock and writeup reviews begin.',
     tag: 'SCOREBOARD FREEZE · WRITEUPS',
@@ -66,7 +66,7 @@ const events = [
     status: 'CEREMONY',
     statusType: 'victory',
     title: 'GRAND RESULTS & KEYNOTE',
-    date: 'OCTOBER 14, 2026',
+    date: 'OCTOBER 11, 2026',
     time: '05:00 PM IST',
     detail: 'Champions crowned, official bounties disbursed, and author writeups published.',
     tag: 'CASH PRIZES · HTB VOUCHERS · PERKS',
@@ -117,16 +117,12 @@ export default function Timeline() {
       {/* Cinematic Intro Header */}
       <div className="timeline-intro reveal">
         <div className="timeline-badge-row">
-          <span className="section-kicker">THE ASCENT</span>
           <span className="timeline-telemetry-badge">
             <Clock size={12} /> 8-HOUR TIMEFRAME
           </span>
         </div>
 
-        <h2>THE SIGNAL<br /><em>UNFOLDS</em></h2>
-        <p className="timeline-sub">
-          Mark your coordinates across five key milestones leading into and through the 8-hour competition window.
-        </p>
+        <h2>THE SIGNAL <em>UNFOLDS</em></h2>
 
         <div className="timeline-actions-row">
           {/* Filter Pills */}
