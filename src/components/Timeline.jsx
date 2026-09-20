@@ -40,7 +40,7 @@ const events = [
     phase: 'PHASE // 03',
     status: 'CRITICAL WINDOW',
     statusType: 'critical',
-    title: 'CTF COMMENCES (FLAG HUNT)',
+    title: 'CTF COMMENCES',
     date: 'OCTOBER 09, 2026',
     time: '10:00 AM IST',
     detail: '8-hour non-stop flag hunt begins across all 7 challenge disciplines.',

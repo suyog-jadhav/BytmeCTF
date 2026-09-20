@@ -1,5 +1,5 @@
 
-import { Scale, ArrowUpRight } from 'lucide-react'
+import { Scale } from 'lucide-react'
 
 const stats = [
   {
@@ -88,9 +88,19 @@ export default function About({ onOpenRules }) {
                   onClick={onOpenRules}
                   aria-label="View competition rules"
                 >
-                  <Scale size={15} className="about-rules-btn-icon" />
-                  <span>RULES OF ENGAGEMENT</span>
-                  <ArrowUpRight size={14} className="about-rules-btn-arrow" />
+                  {/* Ornamental corner brackets */}
+                  <span className="rules-btn-corner rules-btn-corner--tl" aria-hidden="true" />
+                  <span className="rules-btn-corner rules-btn-corner--tr" aria-hidden="true" />
+                  <span className="rules-btn-corner rules-btn-corner--bl" aria-hidden="true" />
+                  <span className="rules-btn-corner rules-btn-corner--br" aria-hidden="true" />
+
+                  {/* Circular icon badge */}
+                  <span className="rules-btn-icon-badge" aria-hidden="true">
+                    <Scale size={16} />
+                  </span>
+
+                  <span className="rules-btn-label">RULES OF ENGAGEMENT</span>
+                  <span className="rules-btn-arrow" aria-hidden="true">→</span>
                 </button>
               </div>
             </div>

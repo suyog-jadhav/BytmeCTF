@@ -15,7 +15,7 @@ const prizes = {
       title: 'CHAMPION',
       reward: 'REVEALING SOON',
       rewardType: 'CASH PRIZE',
-      icon: '/assets/prize-crown-1.png',
+      icon: '/assets/prize-medal-1.png',
       motto: 'HACK / SOLVE / CONQUER',
     },
     {
@@ -41,7 +41,7 @@ const prizes = {
       title: 'CHAMPION',
       reward: 'REVEALING SOON',
       rewardType: 'VOUCHERS & PERKS',
-      icon: '/assets/prize-crown-1.png',
+      icon: '/assets/prize-medal-1.png',
       motto: 'HACK / SOLVE / CONQUER',
     },
     {
@@ -86,10 +86,7 @@ export default function Prizes() {
             className={`prize-mode-tab ${activeTrack === 'offline' ? 'prize-mode-tab--active' : ''}`}
             onClick={() => setActiveTrack('offline')}
           >
-            <span className="prize-mode-tab-icon">🏆</span>
-            <div className="prize-mode-tab-labels">
-              <span className="prize-mode-tab-title">OFFLINE TRACK</span>
-            </div>
+            <span className="prize-mode-tab-title">OFFLINE TRACK</span>
           </button>
 
           <div className="prize-mode-tab-divider" />
@@ -101,10 +98,7 @@ export default function Prizes() {
             className={`prize-mode-tab ${activeTrack === 'online' ? 'prize-mode-tab--active' : ''}`}
             onClick={() => setActiveTrack('online')}
           >
-            <span className="prize-mode-tab-icon">🌐</span>
-            <div className="prize-mode-tab-labels">
-              <span className="prize-mode-tab-title">ONLINE TRACK</span>
-            </div>
+            <span className="prize-mode-tab-title">ONLINE TRACK</span>
           </button>
         </div>
 
@@ -132,7 +126,7 @@ export default function Prizes() {
                   <img
                     src={medal.icon}
                     alt={medal.title}
-                    className={`prize-emblem-img ${isChampion ? 'prize-emblem-img--crown' : ''}`}
+                    className="prize-emblem-img"
                     loading="lazy"
                   />
                 </div>
