@@ -28,9 +28,9 @@ export default function About({ onOpenRules }) {
       {/* ── CINEMATIC PORTAL BACKGROUND & 3D LAYER ──────────────── */}
       <div className="about-portal-backdrop" aria-hidden="true">
         <picture>
-          <source media="(max-width: 768px)" srcSet="/assets/about-portal-bg-mobile.jpg" />
+          <source media="(max-width: 768px)" srcSet="/assets/about-portal-bg-mobile.jpg?v=2" />
           <img
-            src="/assets/about-portal-bg.png"
+            src="/assets/about-portal-bg.png?v=2"
             alt=""
             className="about-portal-bg-img"
             loading="eager"

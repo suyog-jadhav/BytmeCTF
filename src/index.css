@@ -6865,6 +6865,10 @@ footer small {
   background: #070403;
   opacity: 0;
   transition: opacity 0.35s ease;
+  pointer-events: none;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .splash-fullscreen-video--ready {

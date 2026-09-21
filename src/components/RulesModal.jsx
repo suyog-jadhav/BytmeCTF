@@ -6,7 +6,7 @@ const RULES = [
     num: '01',
     title: 'Flag Format',
     text: 'All flags follow the format',
-    code: 'byteme{flag_here}',
+    code: 'OWASP{flag_here}',
     note: '(strictly case-sensitive).',
   },
   {

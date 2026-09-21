@@ -15,12 +15,12 @@ export default function SplashScreen({ onFinish }) {
   const [isReady, setIsReady] = useState(false)
   const [loadProgress, setLoadProgress] = useState(0)
   const [activeSrc, setActiveSrc] = useState(null)
-  const [isLoaded, setIsLoaded] = useState(false)
+  const [isBlobReady, setIsBlobReady] = useState(false)
+  const [isMuted, setIsMuted] = useState(false)
 
   const hasFinishedRef = useRef(false)
   const hasStartedPlaybackRef = useRef(false)
   const blobUrlRef = useRef(null)
-  const [isMuted, setIsMuted] = useState(false)
 
   const handleFinish = useCallback(() => {
     if (hasFinishedRef.current) return
@@ -32,19 +32,6 @@ export default function SplashScreen({ onFinish }) {
     }, 2400)
   }, [onFinish])
 
-  const toggleSound = (e) => {
-    e.stopPropagation()
-    const video = videoRef.current
-    if (!video) return
-    const nextMuted = !video.muted
-    video.muted = nextMuted
-    if (!nextMuted) {
-      video.volume = 1.0
-      video.play().catch(() => { })
-    }
-    setIsMuted(nextMuted)
-  }
-
   const handleTimeUpdate = () => {
     const video = videoRef.current
     if (!video || !video.duration) return
@@ -55,22 +42,53 @@ export default function SplashScreen({ onFinish }) {
     }
   }
 
-  const unmute = useCallback(() => {
+  // Robust Unmute + Play: ensures video continues playing seamlessly on mobile
+  const unmuteAndPlay = useCallback((e) => {
+    if (e && typeof e.stopPropagation === 'function') {
+      e.stopPropagation()
+    }
     const video = videoRef.current
     if (!video) return
+
     video.muted = false
     video.volume = 1.0
     setIsMuted(false)
+
+    // Crucial for iOS Safari and Android Chrome: calling play() directly
+    // within the user gesture handler ensures audio is enabled without pausing the video
+    const playPromise = video.play()
+    if (playPromise !== undefined) {
+      playPromise.catch((err) => {
+        console.warn('Playback resume notice:', err)
+      })
+    }
   }, [])
 
-  // Play video smoothly once 100% buffered with audio unmuted by default
-  const startPlayback = useCallback(() => {
-    if (hasStartedPlaybackRef.current) return
-    hasStartedPlaybackRef.current = true
-    setIsReady(true)
-
+  const toggleSound = (e) => {
+    if (e && typeof e.stopPropagation === 'function') {
+      e.stopPropagation()
+    }
+    if (e && typeof e.preventDefault === 'function') {
+      e.preventDefault()
+    }
     const video = videoRef.current
     if (!video) return
+
+    if (video.muted || isMuted) {
+      unmuteAndPlay(e)
+    } else {
+      video.muted = true
+      setIsMuted(true)
+    }
+  }
+
+  // Play video smoothly once 100% buffered with audio
+  const startPlayback = useCallback(() => {
+    if (hasStartedPlaybackRef.current) return
+    const video = videoRef.current
+    if (!video) return
+
+    hasStartedPlaybackRef.current = true
 
     video.currentTime = 0
     video.muted = false
@@ -81,17 +99,28 @@ export default function SplashScreen({ onFinish }) {
       playPromise
         .then(() => {
           setIsMuted(false)
+          setIsReady(true) // Loading animation ends only after smooth playback starts
         })
         .catch(() => {
-          // If browser policy restricts unmuted autoplay, start video playing muted initially
+          // If mobile browser policy restricts unmuted autoplay, start muted
           video.muted = true
           setIsMuted(true)
-          video.play().catch(() => { })
+          video
+            .play()
+            .then(() => {
+              setIsReady(true)
+            })
+            .catch(() => {
+              // Fallback: reveal video even if initial autoplay was blocked
+              setIsReady(true)
+            })
         })
+    } else {
+      setIsReady(true)
     }
   }, [])
 
-  // Preload the entire video and audio stream into local memory before starting playback
+  // Preload the entire video and audio stream into local memory as a Blob before playback
   useEffect(() => {
     let isCancelled = false
     const controller = new AbortController()
@@ -140,7 +169,7 @@ export default function SplashScreen({ onFinish }) {
           blobUrlRef.current = url
           setActiveSrc(url)
           setLoadProgress(100)
-          setIsLoaded(true)
+          setIsBlobReady(true)
           return
         } catch (err) {
           if (isCancelled) return
@@ -153,7 +182,7 @@ export default function SplashScreen({ onFinish }) {
         const fallbackSrc = isMobileScreen() ? MOBILE_VIDEO : DESKTOP_VIDEO_REMOTE
         setActiveSrc(fallbackSrc)
         setLoadProgress(100)
-        setIsLoaded(true)
+        setIsBlobReady(true)
       }
     }
 
@@ -169,16 +198,15 @@ export default function SplashScreen({ onFinish }) {
     }
   }, [])
 
-  // Strict Condition: Keep loading animation running until BOTH the full video and audio are decoded & ready to play through
+  // Strict Condition: Keep loading animation running until the full video & audio are decoded and ready to play through
   useEffect(() => {
-    if (!isLoaded || !activeSrc) return
+    if (!isBlobReady || !activeSrc) return
     const video = videoRef.current
     if (!video) return
 
-    video.muted = false
-    video.volume = 1.0
+    video.load()
 
-    // If browser already has enough decoded data to play to the end without buffering
+    // readyState 4 = HAVE_ENOUGH_DATA (video & audio can play through without buffering lag)
     if (video.readyState >= 4) {
       startPlayback()
       return
@@ -189,52 +217,50 @@ export default function SplashScreen({ onFinish }) {
         startPlayback()
       } else {
         requestAnimationFrame(() => {
-          startPlayback()
+          if (video.readyState >= 3) {
+            startPlayback()
+          }
         })
       }
     }
 
     video.addEventListener('canplaythrough', onCanPlayThrough, { once: true })
-    video.addEventListener('canplay', onCanPlayThrough, { once: true })
 
-    // Safety fallback if browser stalls readyState notification (max 8s after full blob load)
+    // Safety timeout: in case browser delays firing canplaythrough even with full blob
     const safetyTimer = setTimeout(() => {
       if (video.readyState >= 2) {
         startPlayback()
       }
-    }, 8000)
+    }, 4000)
 
     return () => {
       clearTimeout(safetyTimer)
       video.removeEventListener('canplaythrough', onCanPlayThrough)
-      video.removeEventListener('canplay', onCanPlayThrough)
     }
-  }, [isLoaded, activeSrc, startPlayback])
+  }, [isBlobReady, activeSrc, startPlayback])
 
-  // If muted by browser policy, immediately unmute on first user interaction anywhere
+  // Mobile Tap-to-Unmute: when muted on mobile, tapping anywhere unmutes and continues playback
   useEffect(() => {
-    if (!isMuted) return
+    if (!isMuted || !isReady) return
 
-    const handleUserGesture = (e) => {
-      if (e.target && typeof e.target.closest === 'function' && e.target.closest('.splash-btn-skip')) {
-        return
+    const handleTapToUnmute = (e) => {
+      // Don't intercept clicks on the skip button or direct audio button
+      if (e.target && typeof e.target.closest === 'function') {
+        if (e.target.closest('.splash-btn-skip') || e.target.closest('.splash-btn-audio')) {
+          return
+        }
       }
-      if (e.key === 'Escape') {
-        return
-      }
-      unmute()
+      unmuteAndPlay(e)
     }
 
-    window.addEventListener('pointerdown', handleUserGesture, { capture: true, once: true })
-    window.addEventListener('keydown', handleUserGesture, { capture: true, once: true })
-    window.addEventListener('touchstart', handleUserGesture, { capture: true, once: true })
+    window.addEventListener('touchend', handleTapToUnmute, { capture: true, once: true })
+    window.addEventListener('click', handleTapToUnmute, { capture: true, once: true })
 
     return () => {
-      window.removeEventListener('pointerdown', handleUserGesture, { capture: true })
-      window.removeEventListener('keydown', handleUserGesture, { capture: true })
-      window.removeEventListener('touchstart', handleUserGesture, { capture: true })
+      window.removeEventListener('touchend', handleTapToUnmute, { capture: true })
+      window.removeEventListener('click', handleTapToUnmute, { capture: true })
     }
-  }, [isMuted, unmute])
+  }, [isMuted, isReady, unmuteAndPlay])
 
   // Keyboard shortcut: Escape skips immediately
   useEffect(() => {
@@ -253,8 +279,10 @@ export default function SplashScreen({ onFinish }) {
       className={`splash-fullscreen ${isFadingOut ? 'splash-fullscreen--fade-out' : ''}`}
       role="region"
       aria-label="Splash Screen"
-      onClick={() => {
-        if (isMuted) unmute()
+      onClick={(e) => {
+        if (isMuted && !e.target.closest('.splash-controls')) {
+          unmuteAndPlay(e)
+        }
       }}
     >
       {/* Sleek Theme Preloader while video completely loads */}
@@ -296,6 +324,9 @@ export default function SplashScreen({ onFinish }) {
           ref={videoRef}
           src={activeSrc}
           playsInline
+          webkit-playsinline="true"
+          disablePictureInPicture
+          disableRemotePlayback
           preload="auto"
           onTimeUpdate={handleTimeUpdate}
           onEnded={handleFinish}
@@ -319,7 +350,7 @@ export default function SplashScreen({ onFinish }) {
                   <line x1="23" y1="9" x2="17" y2="15" />
                   <line x1="17" y1="9" x2="23" y2="15" />
                 </svg>
-                <span>CLICK TO UNMUTE</span>
+                <span>TAP TO ENABLE AUDIO</span>
               </>
             ) : (
               <>
