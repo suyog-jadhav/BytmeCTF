@@ -4916,18 +4916,113 @@ footer small {
   width: min(800px, 95vw);
 }
 
-.modal-card--starting-soon {
-  width: min(460px, 92vw);
+.modal-card--starting-soon,
+.modal-card--registration {
+  width: min(440px, 92vw);
   text-align: center;
-  padding: 28px 28px 38px;
+  padding: 22px 20px 22px;
 }
 
-.starting-soon-container {
+.starting-soon-container,
+.registration-choice-container {
   display: flex;
   flex-direction: column;
   align-items: center;
+  text-align: center;
+  padding: 4px 0 2px;
+}
+
+.registration-choice-title {
+  font-family: 'Punishment', 'Anton', 'Rajdhani', sans-serif !important;
+  font-size: clamp(28px, 4.5vw, 38px) !important;
+  font-weight: normal !important;
+  letter-spacing: 0.05em !important;
+  color: #f7efe7;
+  margin: 0 0 4px 0;
+  line-height: 1 !important;
+  text-transform: uppercase !important;
+  text-shadow: 0 4px 16px rgba(0, 0, 0, 0.9);
+}
+
+.registration-choice-title em {
+  font-style: normal;
+  color: #ff9a3d;
+  text-shadow: 0 0 18px rgba(255, 120, 20, 0.6);
+}
+
+.registration-choice-subtitle {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: #a8846c;
+  margin: 0 0 16px 0;
+  text-transform: uppercase;
+}
+
+.registration-tracks-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  width: 100%;
+}
+
+.registration-track-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
   justify-content: center;
-  padding: 20px 8px 12px;
+  gap: 7px;
+  padding: 11px 12px;
+  background: linear-gradient(135deg, rgba(34, 18, 12, 0.92) 0%, rgba(18, 10, 7, 0.96) 100%);
+  border: 1px solid rgba(255, 120, 30, 0.38);
+  border-radius: 6px;
+  text-decoration: none;
+  color: #f0e6df;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.registration-track-btn:hover {
+  background: linear-gradient(135deg, #c76736 0%, #B55B2E 52%, #8c3f19 100%);
+  border-color: #ff9a3d;
+  color: #ffffff;
+  transform: translateY(-1.5px);
+  box-shadow: 0 6px 18px rgba(181, 91, 46, 0.55), 0 0 12px rgba(255, 120, 20, 0.35);
+}
+
+.track-btn-icon {
+  color: #ff9a3d;
+  flex-shrink: 0;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.registration-track-btn:hover .track-btn-icon {
+  color: #ffffff;
+}
+
+.track-btn-text {
+  font-family: 'DM Mono', monospace;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+}
+
+.track-btn-arrow {
+  color: #a8846c;
+  flex-shrink: 0;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.registration-track-btn:hover .track-btn-arrow {
+  color: #ffffff;
+  transform: translate(2px, -2px);
+}
+
+@media (max-width: 380px) {
+  .registration-tracks-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .starting-soon-beacon-ring {
