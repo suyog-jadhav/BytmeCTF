@@ -5,24 +5,27 @@ const prizes = {
     {
       place: '02',
       title: 'RUNNER UP',
-      reward: 'REVEALING SOON',
-      rewardType: 'CASH PRIZE',
+      reward: '₹4,500',
+      bonus: '+ VOUCHERS',
+      rewardType: 'CASH + VOUCHERS',
       icon: '/assets/prize-medal-2.png',
       motto: 'FIGHT / LEARN / LEVEL UP',
     },
     {
       place: '01',
       title: 'CHAMPION',
-      reward: 'REVEALING SOON',
-      rewardType: 'CASH PRIZE',
+      reward: '₹8,000',
+      bonus: '+ VOUCHERS',
+      rewardType: 'CASH + VOUCHERS',
       icon: '/assets/prize-medal-1.png',
       motto: 'HACK / SOLVE / CONQUER',
     },
     {
       place: '03',
       title: 'THIRD PLACE',
-      reward: 'REVEALING SOON',
-      rewardType: 'CASH PRIZE',
+      reward: '₹2,500',
+      bonus: '+ VOUCHERS',
+      rewardType: 'CASH + VOUCHERS',
       icon: '/assets/prize-medal-3.png',
       motto: 'CURIOSITY / LOGIC / PROGRESS',
     },
@@ -31,24 +34,24 @@ const prizes = {
     {
       place: '02',
       title: 'RUNNER UP',
-      reward: 'REVEALING SOON',
-      rewardType: 'VOUCHERS & PERKS',
+      reward: 'VOUCHERS',
+      rewardType: 'ONLINE TRACK',
       icon: '/assets/prize-medal-2.png',
       motto: 'FIGHT / LEARN / LEVEL UP',
     },
     {
       place: '01',
       title: 'CHAMPION',
-      reward: 'REVEALING SOON',
-      rewardType: 'VOUCHERS & PERKS',
+      reward: 'VOUCHERS',
+      rewardType: 'ONLINE TRACK',
       icon: '/assets/prize-medal-1.png',
       motto: 'HACK / SOLVE / CONQUER',
     },
     {
       place: '03',
       title: 'THIRD PLACE',
-      reward: 'REVEALING SOON',
-      rewardType: 'VOUCHERS & PERKS',
+      reward: 'VOUCHERS',
+      rewardType: 'ONLINE TRACK',
       icon: '/assets/prize-medal-3.png',
       motto: 'CURIOSITY / LOGIC / PROGRESS',
     },
@@ -73,6 +76,10 @@ export default function Prizes() {
       <div className="prizes-content-wrap">
         {/* ── HEADING ──────────────────────────────────────── */}
         <div className="prize-heading reveal">
+          <div className="prize-pool-badge">
+            <span className="prize-pool-badge-dot" aria-hidden="true" />
+            <span className="prize-pool-badge-text">TOTAL PRIZE POOL WORTH <strong>₹1.5 LAKH</strong></span>
+          </div>
           <h2>CLAIM YOUR <em>REWARDS</em></h2>
           <p className="prize-subtitle">HYBRID EVENT — DUAL REWARD TRACKS</p>
         </div>
@@ -106,8 +113,8 @@ export default function Prizes() {
         <div className="prize-mode-notice" aria-live="polite">
           <span className="prize-mode-notice-dot" />
           {activeTrack === 'offline'
-            ? 'OFFLINE PARTICIPANTS — ON-SITE EXCLUSIVE CASH PRIZES'
-            : 'ONLINE PARTICIPANTS — GLOBAL LEADERBOARD VOUCHERS & DIGITAL REWARDS'}
+            ? 'OFFLINE PARTICIPANTS — ON-SITE EXCLUSIVE CASH PRIZES + VOUCHERS'
+            : 'ONLINE PARTICIPANTS — GLOBAL LEADERBOARD EXCLUSIVE VOUCHERS'}
         </div>
 
         {/* ── 3-PODIUM PRIZE GRID ──────────────────────────── */}
@@ -141,6 +148,9 @@ export default function Prizes() {
                     {medal.rewardType}
                   </span>
                   <div className="prize-reward-val">{medal.reward}</div>
+                  {medal.bonus && (
+                    <div className="prize-reward-bonus">{medal.bonus}</div>
+                  )}
                 </div>
               </article>
             )

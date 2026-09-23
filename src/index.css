@@ -2286,6 +2286,48 @@ h3 {
   align-items: center;
 }
 
+/* ── PRIZE POOL BADGE ─────────────────────────────────── */
+.prize-pool-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 6px 20px;
+  background: rgba(22, 13, 7, 0.9);
+  border: 1px solid rgba(255, 185, 55, 0.48);
+  border-radius: 9999px;
+  margin-bottom: clamp(14px, 2vh, 22px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7), 0 0 22px rgba(255, 140, 20, 0.22);
+  backdrop-filter: blur(8px);
+  max-width: calc(100% - 24px);
+  box-sizing: border-box;
+}
+
+.prize-pool-badge-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #ffb74d;
+  box-shadow: 0 0 8px #ffa726, 0 0 14px rgba(255, 167, 38, 0.85);
+  animation: noticeDotPulse 1.8s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+.prize-pool-badge-text {
+  font-family: 'DM Mono', monospace;
+  font-size: clamp(10.5px, 1.1vw, 12.5px);
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  color: #f7efe7;
+  text-transform: uppercase;
+}
+
+.prize-pool-badge-text strong {
+  color: #ffcf4d;
+  font-weight: 800;
+  text-shadow: 0 0 12px rgba(255, 207, 77, 0.6);
+}
+
 .prize-heading {
   text-align: center;
   position: relative;
@@ -2789,6 +2831,17 @@ h3 {
 .prize-card:hover .prize-reward-val {
   transform: scale(1.05);
   text-shadow: 0 0 20px rgba(255, 207, 77, 0.75);
+}
+
+.prize-reward-bonus {
+  font-family: 'DM Mono', monospace;
+  font-size: clamp(9px, 0.9vw, 10.5px);
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  color: #ffa726;
+  text-transform: uppercase;
+  margin-top: -2px;
+  text-shadow: 0 0 10px rgba(255, 167, 38, 0.55);
 }
 
 .prize-perks-list {

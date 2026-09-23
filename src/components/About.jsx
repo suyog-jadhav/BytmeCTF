@@ -10,7 +10,7 @@ const stats = [
   },
   {
     idx: '02',
-    value: 'TBA',
+    value: '₹1.5L',
     label: 'PRIZE POOL & PERKS',
     isAmber: true,
   },
